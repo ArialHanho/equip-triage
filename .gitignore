@@ -22,3 +22,5 @@ build/
 *.safetensors
 *.ckpt
 .cache/
+sessions-local.jsonl
+results-local.json

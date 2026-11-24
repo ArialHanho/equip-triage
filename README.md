@@ -48,3 +48,7 @@ python research/long_context.py --out /tmp/long-context-results.json
 ```
 
 Windows에서는 `/tmp/...` 대신 `event-local.json` 등 쓰기 가능한 경로를 사용합니다. 앱 자체에는 PyTorch가 필요하지 않습니다. [연구 및 Colab 재현](research/RESEARCH.md) · [직접 구현할 과제](CONTRIBUTIONS.md). 실행 가능한 self-contained [Colab용 노트북](notebooks/equip-triage-scratch.ipynb)도 포함합니다.
+
+## v0.3 확장 연구
+
+[30,000개 합성 세션 연구](research/v03/RESEARCH.md)는 기존 36개 smoke test와 별개입니다. 24k/3k/3k 분할, 강한 상태기계·trigram 기준선, 검증에서 고정한 오경보 운영점과 AP를 비교합니다. [Colab 독립 실행 노트북](notebooks/equip-triage-v03-30k.ipynb)을 제공합니다. 실제 장비 성능을 의미하지 않습니다.
