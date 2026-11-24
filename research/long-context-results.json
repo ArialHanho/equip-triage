@@ -1,0 +1,222 @@
+{
+  "scope": "hand-designed mode memory diagnostic, not real equipment performance",
+  "seed": 42,
+  "epochs": 240,
+  "torch": "2.9.1+cpu",
+  "device": "cpu",
+  "training_seconds": 0.5796,
+  "summary": {
+    "validation": {
+      "ngram_correct": 2,
+      "transformer_correct": 4,
+      "n": 4
+    },
+    "test": {
+      "ngram_correct": 2,
+      "transformer_correct": 4,
+      "n": 4
+    }
+  },
+  "predictions": [
+    {
+      "split": "validation",
+      "scenario": "validation-CHECK-5",
+      "prefix": [
+        "START",
+        "CHECK",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "LOAD",
+        "MEASURE",
+        "UNLOAD"
+      ],
+      "target": "CHECK",
+      "transformer_prediction": "CHECK",
+      "ngram_prediction": "CHECK",
+      "transformer_target_probability": 0.998674,
+      "ngram_target_probability": 0.333333
+    },
+    {
+      "split": "validation",
+      "scenario": "validation-RETEST-5",
+      "prefix": [
+        "START",
+        "RETEST",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "LOAD",
+        "MEASURE",
+        "UNLOAD"
+      ],
+      "target": "RETEST",
+      "transformer_prediction": "RETEST",
+      "ngram_prediction": "CHECK",
+      "transformer_target_probability": 0.999472,
+      "ngram_target_probability": 0.333333
+    },
+    {
+      "split": "validation",
+      "scenario": "validation-CHECK-8",
+      "prefix": [
+        "START",
+        "CHECK",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "LOAD",
+        "MEASURE",
+        "UNLOAD"
+      ],
+      "target": "CHECK",
+      "transformer_prediction": "CHECK",
+      "ngram_prediction": "CHECK",
+      "transformer_target_probability": 0.999688,
+      "ngram_target_probability": 0.333333
+    },
+    {
+      "split": "validation",
+      "scenario": "validation-RETEST-8",
+      "prefix": [
+        "START",
+        "RETEST",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "LOAD",
+        "MEASURE",
+        "UNLOAD"
+      ],
+      "target": "RETEST",
+      "transformer_prediction": "RETEST",
+      "ngram_prediction": "CHECK",
+      "transformer_target_probability": 0.999335,
+      "ngram_target_probability": 0.333333
+    },
+    {
+      "split": "test",
+      "scenario": "test-CHECK-11",
+      "prefix": [
+        "START",
+        "CHECK",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "LOAD",
+        "MEASURE",
+        "UNLOAD"
+      ],
+      "target": "CHECK",
+      "transformer_prediction": "CHECK",
+      "ngram_prediction": "CHECK",
+      "transformer_target_probability": 0.999277,
+      "ngram_target_probability": 0.333333
+    },
+    {
+      "split": "test",
+      "scenario": "test-RETEST-11",
+      "prefix": [
+        "START",
+        "RETEST",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "LOAD",
+        "MEASURE",
+        "UNLOAD"
+      ],
+      "target": "RETEST",
+      "transformer_prediction": "RETEST",
+      "ngram_prediction": "CHECK",
+      "transformer_target_probability": 0.990035,
+      "ngram_target_probability": 0.333333
+    },
+    {
+      "split": "test",
+      "scenario": "test-CHECK-12",
+      "prefix": [
+        "START",
+        "CHECK",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "LOAD",
+        "MEASURE",
+        "UNLOAD"
+      ],
+      "target": "CHECK",
+      "transformer_prediction": "CHECK",
+      "ngram_prediction": "CHECK",
+      "transformer_target_probability": 0.998478,
+      "ngram_target_probability": 0.333333
+    },
+    {
+      "split": "test",
+      "scenario": "test-RETEST-12",
+      "prefix": [
+        "START",
+        "RETEST",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "MEASURE",
+        "LOAD",
+        "MEASURE",
+        "UNLOAD"
+      ],
+      "target": "RETEST",
+      "transformer_prediction": "RETEST",
+      "ngram_prediction": "CHECK",
+      "transformer_target_probability": 0.998451,
+      "ngram_target_probability": 0.333333
+    }
+  ]
+}
