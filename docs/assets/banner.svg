@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+<title id="title">Equip Triage</title>
+<desc id="desc">Equipment log replay and event sequence modeling. One event in a timeline is masked for reconstruction.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#0B1624"/><stop offset="1" stop-color="#102833"/></linearGradient><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#8DB0BC" opacity=".14"/></pattern></defs>
+<rect width="1200" height="360" rx="22" fill="url(#bg)"/>
+<path fill="url(#grid)" d="M692 30h475v300H692z"/>
+<path fill="none" stroke="#354B58" d="M28 28h1144v304H28z"/>
+<path stroke="#70E2C6" stroke-width="3" d="M28 52V28h24m1096 304h24v-24"/>
+<g font-family="monospace" font-size="15" letter-spacing="2"><text x="60" y="74" fill="#83EDD1">MANUFACTURING SOFTWARE / RESEARCH</text><text x="60" y="294" fill="#BCD0D8">01 LOG REPLAY</text><text x="252" y="294" fill="#BCD0D8">02 EVENT MODELING</text><text x="752" y="92" fill="#BCD0D8">EVENT SEQUENCE</text><text x="752" y="283" fill="#83EDD1">MASKED EVENT PREDICTION</text></g>
+<g font-family="sans-serif"><text x="58" y="166" fill="#F5FAFC" font-size="76" font-weight="700">Equip Triage</text><text x="62" y="220" fill="#BCD0D8" font-size="23">Inspection log replay and from-scratch sequence models.</text></g>
+<g fill="none" stroke="#54848B" stroke-width="2"><path d="M752 179h364"/><path d="M786 150v-22h148v22m148 0v-22H934"/></g>
+<g fill="#142F3B" stroke="#54848B" stroke-width="2"><rect x="752" y="154" width="68" height="50" rx="8"/><rect x="826" y="154" width="68" height="50" rx="8"/><rect x="974" y="154" width="68" height="50" rx="8"/><rect x="1048" y="154" width="68" height="50" rx="8"/></g>
+<rect x="900" y="154" width="68" height="50" rx="8" fill="#83EDD1"/>
+<g font-family="monospace" font-weight="700" font-size="15" text-anchor="middle" fill="#DEF0F1"><text x="786" y="184">LOAD</text><text x="860" y="184">WARN</text><text x="934" y="184" fill="#0B2226">MASK</text><text x="1008" y="184">RETRY</text><text x="1082" y="184">END</text></g>
+<path d="M934 215v37m-6-6 6 6 6-6" fill="none" stroke="#83EDD1" stroke-width="2"/>
+</svg>

@@ -1,14 +1,13 @@
-# 구현 및 기여 범위
+# Contribution guide
 
-이번 공개본의 작은 Transformer, 합성 시나리오 생성기, 비교·테스트·문서는 상원님의 요청을 바탕으로 AI가 작성하고 클라우드 CPU에서 실행한 **참고 구현**이다. 현재 이 코드를 상원님이 독자적으로 직접 구현했다고 주장하지 않는다. PyTorch의 텐서 연산, 자동미분, Linear, Embedding, LayerNorm, optimizer를 사용했다. 어텐션의 Q/K/V 분리, head reshape, scaled dot product, causal mask, softmax, head 결합, 위치 신호, 잔차와 손실 제외 처리는 코드에 보인다. PyTorch나 Transformer 원리를 새로 발명한 기여는 아니다.
+The published implementation, synthetic generators, benchmark harness, and tests began as AI-assisted reference work. Do not attribute that work to someone who did not implement or verify it. PyTorch provides tensor primitives, layers, autograd, and the optimizer; the sequence architecture and experiments are not inventions of those underlying methods.
 
-상원님이 본인 기여로 설명하려면 직접 수행하고 기록할 과제:
+Useful follow-up contributions:
 
-1. 참고 코드를 보지 않고 Q/K/V와 head 분할·결합을 다시 구현하고 shape를 설명한다.
-2. 미래 토큰 교체 테스트를 직접 만들고 causal mask를 제거했을 때 실패함을 확인한다.
-3. 패딩을 제외하는 손실과 target shift를 손으로 계산한 예시와 비교한다.
-4. 독립적으로 새 합성 시나리오를 설계하고 분할 기준을 고정한 뒤 평가한다. 공개 테스트에 맞춰 튜닝한 결과와 새로운 블라인드 평가를 구분한다.
-5. n-gram 문맥 길이를 바꾸고 위치 정보·어텐션 ablation과 최소 3개 시드를 실행한다. 실패 사례와 비용을 포함한다.
-6. 각 변경을 본인 커밋과 설명·실행 결과로 남긴 뒤, 본인이 실제 구현한 범위만 자기소개/포트폴리오에 기술한다.
+1. Reimplement and explain the Q/K/V projections, head reshaping, and attention masks; add shape and invariance tests.
+2. Check causal masking by perturbing future tokens. Check bidirectional masking by making a masked target depend on information to its right.
+3. Verify the shifted loss and the masked-token loss on a small example with padding.
+4. Add an independently designed event family and freeze the split and operating point before examining results.
+5. Compare longer n-grams, count-based baselines and order ablations across multiple seeds. Record failures as well as gains.
 
-생성 로그는 전부 가상이며 실제 업무 데이터, 회사 코드, 공정 레시피 또는 장비 모델을 사용하지 않았다.
+Use reviewable commits and record exactly what you implemented or validated. Do not include private equipment logs, recipes, or employer code.

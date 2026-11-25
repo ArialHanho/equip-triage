@@ -1,54 +1,60 @@
-# Equip Triage: 검사장비 로그 재현과 초동점검
+![Equip Triage: inspection log replay and from-scratch sequence models](docs/assets/banner.svg)
 
-검사장비 이벤트와 작업 메모를 lot별로 재현하고 **무슨 기록부터 확인할지** 원본 행과 함께 보여주는 로컬 포트폴리오 프로젝트입니다. 실제 장비·회사 자료는 사용하지 않았습니다. 자동 제어, 품질 판정, SECS/GEM 호환, 수율 개선 또는 양산 현장 검증을 주장하지 않습니다.
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](#quickstart)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2CA58D)](LICENSE)
+[![Open 30K benchmark in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ArialHanho/equip-triage/blob/c08386f3c4d0c7425a5dd8e7e60b259aa575628e/notebooks/equip-triage-v03-30k.ipynb)
 
-## 실행
+Replay inspection logs without losing the original evidence. Then test whether **an encoder built from scratch** can recognize unusual event context that simpler methods miss.
 
-Python 3.11 이상, 앱 실행에 별도 패키지 없음. 프로젝트 폴더에서:
+## What belongs in software, and what belongs in a model?
 
-```text
+| Layer | Responsibility | Status |
+| --- | --- | --- |
+| **Log replay** | Parse CSV, preserve source rows, canonicalize timestamps to UTC, isolate equipment/lot streams, and flag duplicates, gaps, or conflicts. | Runnable local app using Python and SQLite. |
+| **Sequence baselines** | Learn normal event order with a trigram and a hand-built causal Transformer. Compare both with an explicit state machine and shared timing/sequence rules. | Evaluated on 30,000 synthetic sessions. |
+| **BERT-style encoder** | Implement token and position embeddings, multi-head Q/K/V attention, feed-forward layers, residuals, normalization, and a masked-event head. Train from random initialization. | Separate research track; the synthetic causal scores below are not BERT results. |
+
+The causal model predicts the **next event from its prefix**. The BERT-style objective reconstructs a **masked event using both sides** of a completed sequence. The latter is for retrospective triage, not live alarms or online early detection. Event IDs are the tokens; this is not a Korean language model. Neither research model is wired to the replay app. No pretrained checkpoints are required.
+
+## Quickstart
+
+From the repository root, use Python 3.11+; the replay app has no external dependencies.
+
+```sh
 python app.py --serve
 ```
 
-브라우저에서 <http://127.0.0.1:8765/>를 엽니다. Windows에서 `python`이 없다면 `py -3 app.py --serve`를 사용합니다. 서버는 로컬 주소만 사용하며, 끄려면 Ctrl+C를 누릅니다.
+Open [localhost:8765](http://127.0.0.1:8765/). Stop with Ctrl+C. The bundled CSV is synthetic. Rows for the same lot ID on different machines stay separate; select a flagged stream to inspect the original record.
 
-```text
+```sh
 python app.py --json
 python app.py --input examples/events.csv --serve --port 8766
 python -m unittest discover -s tests -v
 ```
 
-- **SIM-A / LOT-001:** 접촉 경고와 재검 근거가 있으나 순번 누락 및 충돌 때문에 판정 보류. 충돌 시 첫 수신 기록은 원본과 함께 남기되 정상으로 간주하지 않습니다.
-- **SIM-B / LOT-001:** A와 lot 번호가 같아도 별도 타임라인. 통신 단절 코드를 찾아 원본 근거를 표시합니다.
-- **SIM-C / LOT-002:** 유효 이벤트에 등록된 경고가 없습니다. 전역 수신 품질에는 시간대 없는 행이 별도로 표시됩니다. 제품 합격 또는 완전한 데이터임을 뜻하지 않습니다.
+The CSV header is `equipment,lot,sequence,time,code,memo`. Use UTF-8, an offset-aware timestamp (or `Z`), and sequence numbers starting at 1 for each equipment/lot pair. The app replays a file into an in-memory database; it is not a live collector, permanent historian, or equipment controller.
 
-## 입력과 한계
+## Measured: 30,000 synthetic equipment sessions
 
-`equipment,lot,sequence,time,code,memo` 헤더의 UTF-8 CSV를 읽습니다. 순번은 장비·lot 안에서 1부터 시작하고 시각에는 UTC 오프셋 또는 Z가 필요합니다. 행 번호는 헤더를 포함한 CSV 레코드 번호입니다. 정규화 데이터와 원문 필드를 SQLite 메모리 DB에서 나눠 처리한 뒤 입력시각이 아닌 UTC 이벤트 시각으로 보여줍니다. 파일 재생이며 실시간 수집기나 영구 DB가 아닙니다.
+24,000 normal train sessions, 3,000 validation, 3,000 test; 766,290 event rows total. The test set has 150 injected anomalies and 2,850 normal sessions. Fix each threshold on validation normals (target false-alarm rate ≤1%), then apply it unchanged to test.
 
-메모는 **키워드 기준선**만 앱에 들어 있습니다. 근거가 없거나 둘 이상 범주가 겹치면 보류합니다. 앱 키워드 규칙은 측정·접촉, 통신, 설정 세 범주와 분류 보류를 사용합니다. 별도 NLP 연구의 라벨 정의와 데이터는 이 앱 규칙과 독립적이며, 실험 모델은 화면에 연결되지 않았습니다. 첫 버전은 낮은 운영 복잡도를 위해 읽기 전용으로만 동작합니다.
+| Method | Test AP ↑ | Anomalies caught ↑ | False alarms ↓ |
+| --- | ---: | ---: | ---: |
+| Trigram, events only | 0.2924 | 38/150 | 0/2,850 |
+| Causal Transformer, events only | 0.5063 | 70/150 | 98/2,850 |
+| Trigram + shared numeric rules | 0.8315 | 123/150 | 0/2,850 |
+| Causal Transformer + shared numeric rules | 1.0000 | 150/150 | 98/2,850 |
+| State machine + numeric rules | 1.0000 | 150/150 | 0/2,850 |
 
-## 재현 연구와 공개 범위
+These are the [committed Linux CPU results](research/v03/results-30k.json). The Colab CPU run reproduced the AP and recall shown here with 97 Transformer false alarms instead of 98. **The state machine performed best at the chosen operating point.** It knows the generator grammar; the Transformer ranked this synthetic test perfectly with numeric rules but still fired on normal sessions at the threshold chosen on validation. That is not evidence of a production yield gain or field accuracy. See the [experiment protocol](research/v03/RESEARCH.md).
 
-- [연구 기록](research/RESEARCH.md): 합성 한국어 작업 메모 분류, 표현군을 분리한 데이터, 규칙 및 문자 TF-IDF 기준선, 무작위 초기화 이벤트 Transformer와 n-gram 비교.
-- [작업 인덱스](INDEX.md) · [공개 전 확인](RELEASE_CHECKLIST.md) · [코드 라이선스](LICENSE)
+## Public data: what it can establish
 
-## v0.2 참고 구현: 이벤트 시퀀스 Transformer
+[LogHub HDFS v1](https://github.com/logpai/loghub/tree/master/HDFS) contains labeled Hadoop block traces. It can test event-sequence methods on real system logs, not on semiconductor equipment. [UCI SECOM](https://archive.ics.uci.edu/dataset/179/secom) contains manufacturing measurements and pass/fail labels, not equipment event sequences or operator notes. Treat it as a separate tabular task. See [research sources and evaluation criteria](docs/EVALUATION.md).
 
-외부 사전학습 모델·가중치를 사용하거나 내려받지 않습니다. `research/event_transformer.py`는 이벤트 ID를 입력으로 다중 헤드 어텐션, 위치 정보, 잔차 연결, causal mask와 패딩 제외 손실을 직접 보여주는 **AI 작성 참고 코드**입니다. 앱 화면에는 아직 연결하지 않았습니다.
+## Repository map
 
-```sh
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# Linux/macOS: source .venv/bin/activate
-python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu
-python research/event_transformer.py --out /tmp/event-results.json
-python -m unittest discover -s research -p test_events.py -v
-python research/long_context.py --out /tmp/long-context-results.json
-```
+- [Project index](INDEX.md) · [Original causal and memo baselines](research/RESEARCH.md) · [Contribution guide](CONTRIBUTIONS.md)
+- [30K experiment code](research/v03/scale_pilot.py) · [Notebook](notebooks/equip-triage-v03-30k.ipynb) · [Results](research/v03/results-30k.json)
 
-Windows에서는 `/tmp/...` 대신 `event-local.json` 등 쓰기 가능한 경로를 사용합니다. 앱 자체에는 PyTorch가 필요하지 않습니다. [연구 및 Colab 재현](research/RESEARCH.md) · [직접 구현할 과제](CONTRIBUTIONS.md). 실행 가능한 self-contained [Colab용 노트북](notebooks/equip-triage-scratch.ipynb)도 포함합니다.
-
-## v0.3 확장 연구
-
-[30,000개 합성 세션 연구](research/v03/RESEARCH.md)는 기존 36개 smoke test와 별개입니다. 24k/3k/3k 분할, 강한 상태기계·trigram 기준선, 검증에서 고정한 오경보 운영점과 AP를 비교합니다. [Colab 독립 실행 노트북](notebooks/equip-triage-v03-30k.ipynb)을 제공합니다. 실제 장비 성능을 의미하지 않습니다.
+MIT applies to repository code and original synthetic fixtures, not third-party datasets. No proprietary manufacturing data, live equipment integration, or production validation is included.
