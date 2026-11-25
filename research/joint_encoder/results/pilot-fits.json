@@ -1,0 +1,308 @@
+{
+  "baselines": {
+    "arms": {
+      "char_joint": {
+        "calibration": {
+          "threshold": 0.5,
+          "validation": []
+        },
+        "fit_validation_seconds": 6.744240099000308,
+        "model_sha256": "7146d9b031c6f415505ff2b5699d5917ed71cdaa88493c7801a57c32ed214ecb"
+      },
+      "char_log": {
+        "calibration": {
+          "threshold": 0.5,
+          "validation": []
+        },
+        "fit_validation_seconds": 0.11063992900017183,
+        "model_sha256": "04c852bd01ff7fe21d2c97deddf795199130370642f08b78ae16ff4f50d1da47"
+      },
+      "char_memo": {
+        "calibration": {
+          "threshold": 0.5,
+          "validation": []
+        },
+        "fit_validation_seconds": 0.29220586700103013,
+        "model_sha256": "f142ca2edc35e67d88584025f623a0e3f37a703d61e81e8c8b6f947d53ecaf38"
+      },
+      "rule": {
+        "calibration": {
+          "threshold": 0.5,
+          "validation": []
+        },
+        "fit_validation_seconds": 1.9740000425372273e-06,
+        "model_sha256": null
+      }
+    },
+    "sklearn": "1.8.0",
+    "source_lock": "97ef48e8c560d23a0b82aa4381e49f7dafd3a0ea81c9435fada38525e34765db"
+  },
+  "native_arms": {
+    "direct-17": {
+      "calibration": {
+        "threshold": 0.5,
+        "validation": []
+      },
+      "finished_utc": "2026-11-25T07:19:09.779869+00:00",
+      "parameters": 44453,
+      "progress": {
+        "epoch": 2,
+        "epoch_sum": 0.0,
+        "examples": 864,
+        "history": [
+          0.8426929323209656,
+          0.7886625073022313
+        ],
+        "next_batch": 0,
+        "seconds": 2.2873036729979503,
+        "steps": 54
+      },
+      "python": "3.12.14",
+      "spec": {
+        "arm": "direct",
+        "cuda": null,
+        "device": "cpu",
+        "epochs": 2,
+        "format": "equip-triage/joint-v1",
+        "gpu": null,
+        "logical_batch": 16,
+        "microbatch": 4,
+        "precision": "fp32",
+        "profile": "pilot",
+        "seed": 17,
+        "source_lock": "97ef48e8c560d23a0b82aa4381e49f7dafd3a0ea81c9435fada38525e34765db",
+        "torch": "2.9.1+cpu",
+        "width": 32
+      },
+      "weights_sha256": "75f19c1d5abd0185c95b5910876535a4dda1c95d148f1287509b6505ff83e6ee"
+    },
+    "joint-17": {
+      "calibration": {
+        "threshold": 0.5,
+        "validation": []
+      },
+      "finished_utc": "2026-11-25T07:19:18.382965+00:00",
+      "parameters": 44453,
+      "progress": {
+        "epoch": 2,
+        "epoch_sum": 0.0,
+        "examples": 864,
+        "history": [
+          1.8307501397750996,
+          1.3924394371332947
+        ],
+        "next_batch": 0,
+        "seconds": 3.381178531999467,
+        "steps": 54
+      },
+      "python": "3.12.14",
+      "spec": {
+        "arm": "joint",
+        "cuda": null,
+        "device": "cpu",
+        "epochs": 2,
+        "format": "equip-triage/joint-v1",
+        "gpu": null,
+        "logical_batch": 16,
+        "microbatch": 4,
+        "precision": "fp32",
+        "profile": "pilot",
+        "seed": 17,
+        "source_lock": "97ef48e8c560d23a0b82aa4381e49f7dafd3a0ea81c9435fada38525e34765db",
+        "torch": "2.9.1+cpu",
+        "width": 32
+      },
+      "weights_sha256": "af297fad8867ab1abc22a29fcfde7640469b7914c18e7f4751ad7f2e77bc7021"
+    },
+    "log_only-17": {
+      "calibration": {
+        "threshold": 0.5,
+        "validation": []
+      },
+      "finished_utc": "2026-11-25T07:18:56.288802+00:00",
+      "parameters": 44453,
+      "progress": {
+        "epoch": 2,
+        "epoch_sum": 0.0,
+        "examples": 864,
+        "history": [
+          1.6893705151699208,
+          1.3002585525865908
+        ],
+        "next_batch": 0,
+        "seconds": 2.2743442689970834,
+        "steps": 54
+      },
+      "python": "3.12.14",
+      "spec": {
+        "arm": "log_only",
+        "cuda": null,
+        "device": "cpu",
+        "epochs": 2,
+        "format": "equip-triage/joint-v1",
+        "gpu": null,
+        "logical_batch": 16,
+        "microbatch": 4,
+        "precision": "fp32",
+        "profile": "pilot",
+        "seed": 17,
+        "source_lock": "97ef48e8c560d23a0b82aa4381e49f7dafd3a0ea81c9435fada38525e34765db",
+        "torch": "2.9.1+cpu",
+        "width": 32
+      },
+      "weights_sha256": "0660493158793e2f812ef6434caebe496c9bfabac3e1110b5f007326ec3e6f99"
+    },
+    "memo_only-17": {
+      "calibration": {
+        "threshold": 0.5,
+        "validation": []
+      },
+      "finished_utc": "2026-11-25T07:19:02.947919+00:00",
+      "parameters": 44453,
+      "progress": {
+        "epoch": 2,
+        "epoch_sum": 0.0,
+        "examples": 864,
+        "history": [
+          1.4692970056224752,
+          1.2881285962131288
+        ],
+        "next_batch": 0,
+        "seconds": 3.004615862002538,
+        "steps": 54
+      },
+      "python": "3.12.14",
+      "spec": {
+        "arm": "memo_only",
+        "cuda": null,
+        "device": "cpu",
+        "epochs": 2,
+        "format": "equip-triage/joint-v1",
+        "gpu": null,
+        "logical_batch": 16,
+        "microbatch": 4,
+        "precision": "fp32",
+        "profile": "pilot",
+        "seed": 17,
+        "source_lock": "97ef48e8c560d23a0b82aa4381e49f7dafd3a0ea81c9435fada38525e34765db",
+        "torch": "2.9.1+cpu",
+        "width": 32
+      },
+      "weights_sha256": "7d269f7defccc3fba1c55496d0dd84ef3ff05c35e42b77a397e8a14c590dd4f5"
+    },
+    "parallel-17": {
+      "calibration": {
+        "threshold": 0.5,
+        "validation": []
+      },
+      "finished_utc": "2026-11-25T07:18:43.518623+00:00",
+      "parameters": 44453,
+      "progress": {
+        "epoch": 2,
+        "epoch_sum": 0.0,
+        "examples": 864,
+        "history": [
+          1.8407107006620478,
+          1.387154894846457
+        ],
+        "next_batch": 0,
+        "seconds": 2.1132959440001287,
+        "steps": 54
+      },
+      "python": "3.12.14",
+      "spec": {
+        "arm": "parallel",
+        "cuda": null,
+        "device": "cpu",
+        "epochs": 2,
+        "format": "equip-triage/joint-v1",
+        "gpu": null,
+        "logical_batch": 16,
+        "microbatch": 4,
+        "precision": "fp32",
+        "profile": "pilot",
+        "seed": 17,
+        "source_lock": "97ef48e8c560d23a0b82aa4381e49f7dafd3a0ea81c9435fada38525e34765db",
+        "torch": "2.9.1+cpu",
+        "width": 32
+      },
+      "weights_sha256": "5fb32bd7b1628f00a62fb066620b565a7f8b31b3e74801bc3e65c92b9a87bd71"
+    },
+    "pooled-17": {
+      "calibration": {
+        "threshold": 0.5,
+        "validation": []
+      },
+      "finished_utc": "2026-11-25T07:18:37.546631+00:00",
+      "parameters": 44453,
+      "progress": {
+        "epoch": 2,
+        "epoch_sum": 0.0,
+        "examples": 864,
+        "history": [
+          1.8405387136671278,
+          1.519609064415649
+        ],
+        "next_batch": 0,
+        "seconds": 2.149559790999774,
+        "steps": 54
+      },
+      "python": "3.12.14",
+      "spec": {
+        "arm": "pooled",
+        "cuda": null,
+        "device": "cpu",
+        "epochs": 2,
+        "format": "equip-triage/joint-v1",
+        "gpu": null,
+        "logical_batch": 16,
+        "microbatch": 4,
+        "precision": "fp32",
+        "profile": "pilot",
+        "seed": 17,
+        "source_lock": "97ef48e8c560d23a0b82aa4381e49f7dafd3a0ea81c9435fada38525e34765db",
+        "torch": "2.9.1+cpu",
+        "width": 32
+      },
+      "weights_sha256": "d732a8b9d24b6822a023424b022e0d350148114d063cf0671555a58cee0e597b"
+    },
+    "unbound-17": {
+      "calibration": {
+        "threshold": 0.5,
+        "validation": []
+      },
+      "finished_utc": "2026-11-25T07:18:50.143832+00:00",
+      "parameters": 44453,
+      "progress": {
+        "epoch": 2,
+        "epoch_sum": 0.0,
+        "examples": 864,
+        "history": [
+          2.1042825601719044,
+          1.5498775094747543
+        ],
+        "next_batch": 0,
+        "seconds": 2.8710767310076335,
+        "steps": 54
+      },
+      "python": "3.12.14",
+      "spec": {
+        "arm": "unbound",
+        "cuda": null,
+        "device": "cpu",
+        "epochs": 2,
+        "format": "equip-triage/joint-v1",
+        "gpu": null,
+        "logical_batch": 16,
+        "microbatch": 4,
+        "precision": "fp32",
+        "profile": "pilot",
+        "seed": 17,
+        "source_lock": "97ef48e8c560d23a0b82aa4381e49f7dafd3a0ea81c9435fada38525e34765db",
+        "torch": "2.9.1+cpu",
+        "width": 32
+      },
+      "weights_sha256": "68201722f6f32950a779c83e2713dbff006214d9e5673e0442a14d25509fc5c5"
+    }
+  }
+}

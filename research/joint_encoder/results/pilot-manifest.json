@@ -1,0 +1,92 @@
+{
+  "audit": {
+    "pilot": {
+      "bilingual_language_panels": 16,
+      "distinct_memo_sentences": 176,
+      "equipment": 8,
+      "fixed_other_modality_pairs": 32,
+      "order_and_exclusion_invariance_checks": 16,
+      "order_pairs_with_same_log_multiset": 16,
+      "rows": 288
+    },
+    "pilot_train": {
+      "bilingual_language_panels": 24,
+      "distinct_memo_sentences": 250,
+      "equipment": 12,
+      "fixed_other_modality_pairs": 48,
+      "order_and_exclusion_invariance_checks": 24,
+      "order_pairs_with_same_log_multiset": 24,
+      "rows": 432
+    }
+  },
+  "data": {
+    "pilot": {
+      "distinct_visible_packets": 288,
+      "equipment_lot_groups": 8,
+      "families": [
+        "display",
+        "probe"
+      ],
+      "labeled_sha256": "ab499764e46b4081f778f7ecc761e99b3aacc7db42c0a535716d8df804aca2e1",
+      "labels": {
+        "en/data": 11,
+        "en/equipment": 9,
+        "en/hold": 104,
+        "en/measurement": 10,
+        "en/setup": 10,
+        "ko/data": 11,
+        "ko/equipment": 9,
+        "ko/hold": 104,
+        "ko/measurement": 10,
+        "ko/setup": 10
+      },
+      "packet_sha256": "4a8b6d68f52010c892ed2ec079f8babcb626dcca9bb217e926bee1c1888f7a79",
+      "panels": 8,
+      "rows": 288
+    },
+    "pilot_train": {
+      "distinct_visible_packets": 432,
+      "equipment_lot_groups": 12,
+      "families": [
+        "bench",
+        "load",
+        "restart",
+        "second"
+      ],
+      "labeled_sha256": "6a9ad515f526c9667fccdac9b5cc70c15e3139f5a7e3f5c5f724acd8367330a4",
+      "labels": {
+        "en/data": 15,
+        "en/equipment": 15,
+        "en/hold": 156,
+        "en/measurement": 15,
+        "en/setup": 15,
+        "ko/data": 15,
+        "ko/equipment": 15,
+        "ko/hold": 156,
+        "ko/measurement": 15,
+        "ko/setup": 15
+      },
+      "packet_sha256": "74aa5218a46bfe61f104bf1215d282aa239814a3448a3404ae55e390ba4c882f",
+      "panels": 12,
+      "rows": 432
+    }
+  },
+  "format": "equip-triage/joint-v1",
+  "profile": "pilot",
+  "sources": {
+    "equip_triage/encoding.py": "4ff477e9e57b698bf53fb7ef5306cf7229de43b69e8c98c66522c753c36af92d",
+    "equip_triage/joint/__init__.py": "af83cf417bc99718d32f5b4ac2b79404594c41474d0bab88d163334ac408bfa7",
+    "equip_triage/joint/__main__.py": "8391e643abc6e6b434ed6eeec7c0990c93bb7c175394e2d9cc8cbf08544a5d65",
+    "equip_triage/joint/inference.py": "d3d24508d7e77c04c18170dbf9382b18bf535004816553bb83862a74050fb0e8",
+    "equip_triage/joint/model.py": "7a08d70e8ed0d944be76095926a3759a8b58ab030cb83f3a5c883547d50717e8",
+    "equip_triage/joint/sources.py": "cf8593f15f1a9378552a7083a2d29f5e7cb5aa220b31499b0104fd61691867c6",
+    "equip_triage/model.py": "d9ca1a5bc427a684ec62fd9a1b6c5d357cbf1f309157a2d4446afade0388593d",
+    "research/joint_encoder/audit.py": "f8ca541a464eeb08d8a7fa6c8d6ff4e04d93e1e007eb1b1489eadc0555c9341a",
+    "research/joint_encoder/baselines.py": "4dd1e05de40cb51bc2bda91a22b58ad56232b545ae772e2354074c0e40691ec5",
+    "research/joint_encoder/data.py": "a1b1b48f3de789ed2328d0b532cb8d2c0283d12ac29e8c7f4236d6246bcc748a",
+    "research/joint_encoder/metrics.py": "95e891a1f9f7266c72de91257187e07abd7f6eb76e5b6dc7c37e7ff0a7b1f036",
+    "research/joint_encoder/protocol.md": "3f25f8038f3b5ae4fd92685fd6cd932ae7ddd61a4561530cdd9a0ac77d023b35",
+    "research/joint_encoder/public_base.py": "991fdf312c1603877160001d0f3f6467c5446b4becd5fd7266e2a6f9f33b4b3a",
+    "research/joint_encoder/run.py": "2b0a44d5d5a5b29dc232e4e5598f52712b989e68e8d9f132897ff7b70e744340"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "revision": "45c032ab32cc946ad88a166f7cb282f58c753c2e",
+  "weights_sha256": "fcf002be901b9ad708e0df430b8d18deaa4b3fe3519e24e9017a5ee17ca2c228",
+  "format": "safetensors",
+  "device": "cpu",
+  "optimizer": "AdamW",
+  "completed_steps": 1,
+  "examples": 16,
+  "languages": {
+    "en": 7,
+    "ko": 9
+  },
+  "base_layer_0_q_weight_max_abs_change": 2.008676528930664e-05,
+  "checkpoint_model_parameter_entries": 135,
+  "tokenizer_class": "DistilBertTokenizerFast",
+  "official_tokenizer_json_same_ids_every_visible_string": true,
+  "packets_scanned": 11664,
+  "distinct_strings": 4952,
+  "max_wordpieces_including_specials": 26,
+  "main_fit_or_benchmark_score": false
+}

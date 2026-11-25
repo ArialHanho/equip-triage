@@ -1,0 +1,135 @@
+{
+  "audit": {
+    "test": {
+      "bilingual_language_panels": 144,
+      "distinct_memo_sentences": 1264,
+      "equipment": 72,
+      "fixed_other_modality_pairs": 288,
+      "order_and_exclusion_invariance_checks": 144,
+      "order_pairs_with_same_log_multiset": 144,
+      "rows": 2880
+    },
+    "train": {
+      "bilingual_language_panels": 384,
+      "distinct_memo_sentences": 2798,
+      "equipment": 192,
+      "fixed_other_modality_pairs": 768,
+      "order_and_exclusion_invariance_checks": 384,
+      "order_pairs_with_same_log_multiset": 384,
+      "rows": 6912
+    },
+    "val": {
+      "bilingual_language_panels": 64,
+      "distinct_memo_sentences": 596,
+      "equipment": 32,
+      "fixed_other_modality_pairs": 128,
+      "order_and_exclusion_invariance_checks": 64,
+      "order_pairs_with_same_log_multiset": 64,
+      "rows": 1152
+    }
+  },
+  "data": {
+    "test": {
+      "distinct_visible_packets": 2880,
+      "equipment_lot_groups": 72,
+      "families": [
+        "draft",
+        "pickup",
+        "plate",
+        "replica",
+        "spare",
+        "standby"
+      ],
+      "labeled_sha256": "7b982fe68524ed9034d5990767370b09cf1710a2b6e1ff7a82a401bf445cfb36",
+      "labels": {
+        "en/data": 90,
+        "en/equipment": 90,
+        "en/hold": 1080,
+        "en/measurement": 90,
+        "en/setup": 90,
+        "ko/data": 90,
+        "ko/equipment": 90,
+        "ko/hold": 1080,
+        "ko/measurement": 90,
+        "ko/setup": 90
+      },
+      "packet_sha256": "ee7cac4f990062516338cbb0390c6cbee7a20f7a3a78608a7f12ccfdea35f917",
+      "panels": 72,
+      "rows": 2880
+    },
+    "train": {
+      "distinct_visible_packets": 6912,
+      "equipment_lot_groups": 192,
+      "families": [
+        "bench",
+        "cycle",
+        "load",
+        "portable",
+        "restart",
+        "second",
+        "shift",
+        "warm"
+      ],
+      "labeled_sha256": "ef4254e2e652158d1ac93625c7affe438841d367c314e29a00a4d70fc132675f",
+      "labels": {
+        "en/data": 240,
+        "en/equipment": 240,
+        "en/hold": 2496,
+        "en/measurement": 240,
+        "en/setup": 240,
+        "ko/data": 240,
+        "ko/equipment": 240,
+        "ko/hold": 2496,
+        "ko/measurement": 240,
+        "ko/setup": 240
+      },
+      "packet_sha256": "c27214a5a86a8c8bd40efb3cccbfa90ad59f49c0a5f9509d262649d31687e386",
+      "panels": 192,
+      "rows": 6912
+    },
+    "val": {
+      "distinct_visible_packets": 1152,
+      "equipment_lot_groups": 32,
+      "families": [
+        "manual",
+        "receipt",
+        "release",
+        "steady"
+      ],
+      "labeled_sha256": "730a3265489087fa30b7f610ea83ef57945f9157e38dc87442bae20b7e2a3e6a",
+      "labels": {
+        "en/data": 40,
+        "en/equipment": 40,
+        "en/hold": 416,
+        "en/measurement": 40,
+        "en/setup": 40,
+        "ko/data": 40,
+        "ko/equipment": 40,
+        "ko/hold": 416,
+        "ko/measurement": 40,
+        "ko/setup": 40
+      },
+      "packet_sha256": "bb728121cb7bf2af0a69565411c08a39f3421a9194c6c40399f7ffd92a9c6e71",
+      "panels": 32,
+      "rows": 1152
+    }
+  },
+  "format": "equip-triage/joint-v1",
+  "profile": "main",
+  "sources": {
+    "equip_triage/encoding.py": "4ff477e9e57b698bf53fb7ef5306cf7229de43b69e8c98c66522c753c36af92d",
+    "equip_triage/joint/__init__.py": "af83cf417bc99718d32f5b4ac2b79404594c41474d0bab88d163334ac408bfa7",
+    "equip_triage/joint/__main__.py": "8391e643abc6e6b434ed6eeec7c0990c93bb7c175394e2d9cc8cbf08544a5d65",
+    "equip_triage/joint/inference.py": "d3d24508d7e77c04c18170dbf9382b18bf535004816553bb83862a74050fb0e8",
+    "equip_triage/joint/model.py": "7a08d70e8ed0d944be76095926a3759a8b58ab030cb83f3a5c883547d50717e8",
+    "equip_triage/joint/sources.py": "cf8593f15f1a9378552a7083a2d29f5e7cb5aa220b31499b0104fd61691867c6",
+    "equip_triage/model.py": "d9ca1a5bc427a684ec62fd9a1b6c5d357cbf1f309157a2d4446afade0388593d",
+    "research/joint_encoder/audit.py": "f8ca541a464eeb08d8a7fa6c8d6ff4e04d93e1e007eb1b1489eadc0555c9341a",
+    "research/joint_encoder/baselines.py": "4dd1e05de40cb51bc2bda91a22b58ad56232b545ae772e2354074c0e40691ec5",
+    "research/joint_encoder/data.py": "a1b1b48f3de789ed2328d0b532cb8d2c0283d12ac29e8c7f4236d6246bcc748a",
+    "research/joint_encoder/metrics.py": "95e891a1f9f7266c72de91257187e07abd7f6eb76e5b6dc7c37e7ff0a7b1f036",
+    "research/joint_encoder/protocol.md": "3f25f8038f3b5ae4fd92685fd6cd932ae7ddd61a4561530cdd9a0ac77d023b35",
+    "research/joint_encoder/public_base.py": "991fdf312c1603877160001d0f3f6467c5446b4becd5fd7266e2a6f9f33b4b3a",
+    "research/joint_encoder/run.py": "2b0a44d5d5a5b29dc232e4e5598f52712b989e68e8d9f132897ff7b70e744340"
+  }
+}

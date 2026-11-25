@@ -14,4 +14,4 @@ license = {file = "LICENSE"}
 equip-triage = "equip_triage.cli:main"
 
 [tool.setuptools]
-packages = ["equip_triage"]
+packages = ["equip_triage", "equip_triage.joint"]

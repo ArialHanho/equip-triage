@@ -2,9 +2,36 @@
 
 # Equip Triage
 
-**An offline inspection tool for reviewing equipment events and operator notes together.** The CSV viewer reconstructs each equipment/lot sequence and surfaces gaps and conflicts next to the original notes. The repository also includes a BERT-style Transformer implemented in native PyTorch for interpreting Korean and English notes.
+**A native PyTorch encoder for equipment logs and English or Korean work notes, alongside an offline CSV replay viewer.** For two registered checks, the joint encoder estimates which issue continues and predicts which log row and memo line support each state. The viewer reconstructs equipment/lot sequences and displays source records.
 
-[Log viewer](#csv-log-review) · [Run the memo model](#run-the-memo-model) · [Architecture](#transformer-architecture) · [Python API](docs/MEMO_MODEL.md) · [Evaluation archive](docs/EVALUATION.md)
+[Joint encoder](#joint-log-and-memo-encoder) · [Log viewer](#csv-log-review) · [Run the memo model](#run-the-memo-model) · [Architecture](#transformer-architecture) · [Python API](docs/MEMO_MODEL.md) · [Evaluation archive](docs/EVALUATION.md)
+
+## Joint log and memo encoder
+
+**Research preview.** The joint encoder has not passed the baseline comparison. No joint checkpoint is recommended or shipped.
+
+Train a small local checkpoint and run the reusable `equip_triage.joint` API from the checkout.
+
+```sh
+python -m pip install . scikit-learn==1.8.0
+python -m research.joint_encoder.run --profile pilot --work artifacts/joint-pilot prepare
+python -m research.joint_encoder.run --profile pilot --work artifacts/joint-pilot fit --arm joint --device cpu --microbatch 4
+python -m equip_triage.joint --model artifacts/joint-pilot/models/joint-17/model.pt --input examples/joint-observations.jsonl
+```
+
+The cutoff selects observations available for that equipment and lot. Registration rows identify the two candidates. A query for each check first reads its memo lines, then uses that representation to search its log rows. The shared state head predicts continuing, cleared or unknown. Gaps, source conflicts and missing or stale observations trigger a separate hold decision. [Schema, tensor API and output fields](docs/JOINT_ENCODER.md) · [Self-contained Colab training and comparison](notebooks/equip-triage-joint-colab.ipynb)
+
+![Two source streams enter the equipment and time window, then memo- and log-specific readers return source IDs and states.](docs/assets/joint-overview-en.svg)
+
+[Editable architecture, English and Korean](docs/assets/joint-overview.drawio)
+
+### Inside the joint encoder
+
+![Native byte embeddings, bidirectional masked-key attention, residual paths and the four heads of the row encoder.](docs/assets/joint-encoder-en.svg)
+
+The model shares the same encoder across rows. It adds modality, registered slot, age and within-stream order to each row vector. Source pointers are trained against original log and memo IDs and can return an empty result. [Editable layer detail](docs/assets/joint-encoder.drawio) · [Implementation](equip_triage/joint/model.py)
+
+On a 288-record synthetic CPU pilot, the conditioned encoder's first-check macro-F1 was 0.228 in English and 0.214 in Korean. A scoped rule reached 1.000 in both languages, and character/event features reached 0.623 and 0.641. The native reader identified the correct log row in 116 of 248 annotated cases per language. The field and full joint CUDA comparison have no measured results in this release. [Metrics and limitations](research/joint_encoder/REPORT.md)
 
 ## CSV log review
 
@@ -16,7 +43,7 @@ python app.py --serve
 
 Open the [local viewer](http://127.0.0.1:8765/) and select `SIM-A / LOT-001` to see missing sequence 6 and conflicting records at sequence 7. The columns are `equipment,lot,sequence,time,code,memo`. The [sample CSV](examples/events.csv) runs by default. Use `python app.py --input path/to/events.csv --serve` for another file or `python app.py --json` for machine-readable output.
 
-**Integration boundary:** The viewer shows events and original notes together and checks codes and memo keywords with rules. The Transformer runs separately. It reads two registered checks and two lines, then estimates whether each issue continues, has cleared, or is unknown. The Transformer does not take the CSV event sequence as input, and the two paths do not share a final decision.
+The CSV viewer uses its existing replay and keyword rules. The joint API accepts cutoff-aware JSONL with source availability, registered candidates and channel readings. The original memo-only API below accepts a registry and two note lines. Each entry point has its own input contract.
 
 ## Run the memo model
 

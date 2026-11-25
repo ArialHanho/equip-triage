@@ -1,0 +1,8 @@
+{
+  "device": "cpu",
+  "paused_after_steps": 3,
+  "final_steps": 54,
+  "all_weights_identical": true,
+  "all_adamw_tensors_identical": true,
+  "completed_idempotent": true
+}

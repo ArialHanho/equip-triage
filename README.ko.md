@@ -2,9 +2,36 @@
 
 # Equip Triage
 
-**장비 이벤트 로그와 작업 메모를 함께 검토하는 오프라인 점검 도구**입니다. 로그는 장비·LOT별로 재구성하고, 순번 누락과 충돌 같은 이상을 원문과 함께 보여 줍니다. 메모의 문맥을 해석하기 위해 한·영 BERT 계열 트랜스포머도 PyTorch로 직접 구현했습니다.
+**장비 로그와 한·영 작업 메모를 함께 읽는 PyTorch 인코더와 오프라인 CSV 점검 도구입니다.** 결합 인코더는 등록된 점검 후보 두 개의 상태를 추정하고 각 상태를 뒷받침할 것으로 추정한 로그 행과 메모 줄의 ID를 반환합니다. CSV 뷰어는 장비·LOT별 순서와 원본 기록을 보여 줍니다.
 
-[로그 화면](#csv-로그-검토) · [메모 모델 실행](#메모-모델-실행) · [구조도](#트랜스포머-구조) · [Python API](docs/MEMO_MODEL.md) · [검증 기록](docs/EVALUATION.md)
+[결합 인코더](#로그메모-결합-인코더) · [로그 화면](#csv-로그-검토) · [메모 모델 실행](#메모-모델-실행) · [구조도](#트랜스포머-구조) · [Python API](docs/MEMO_MODEL.md) · [검증 기록](docs/EVALUATION.md)
+
+## 로그·메모 결합 인코더
+
+**연구용 프리뷰입니다.** 결합 모델은 아직 기준선을 넘지 못했습니다. 결합 모델의 권장 가중치는 배포하지 않습니다.
+
+저장소 루트에서 작은 체크포인트를 학습한 뒤 `equip_triage.joint`로 합성 예제를 판독할 수 있습니다.
+
+```sh
+python -m pip install . scikit-learn==1.8.0
+python -m research.joint_encoder.run --profile pilot --work artifacts/joint-pilot prepare
+python -m research.joint_encoder.run --profile pilot --work artifacts/joint-pilot fit --arm joint --device cpu --microbatch 4
+python -m equip_triage.joint --model artifacts/joint-pilot/models/joint-17/model.pt --input examples/joint-observations.jsonl
+```
+
+판단 시점까지 해당 장비·LOT에서 관측되고 수신된 기록을 모읍니다. 등록 행은 점검 후보 두 개를 정합니다. 각 후보의 쿼리가 먼저 메모를 읽고, 그 결과를 이용해 로그 행을 찾습니다. 공유 헤드가 지속·해소·불명을 추정합니다. 순번 누락, 원본 기록 충돌, 관측 누락·기한 초과가 있으면 별도 정책이 점검을 보류합니다. [입력 형식·텐서 API·반환값](docs/JOINT_ENCODER.md) · [Colab 학습·재개·비교 노트북](notebooks/equip-triage-joint-colab.ipynb)
+
+![판단 시점 안의 로그와 메모를 후보별 리더가 읽고 상태와 원본 행 ID를 반환하는 구조](docs/assets/joint-overview-ko.svg)
+
+[편집 가능한 전체 구조도 · 한글/영문](docs/assets/joint-overview.drawio)
+
+### 결합 인코더 한 층
+
+![행별 바이트 임베딩, 패딩 마스크를 적용한 양방향 어텐션, 잔차 연결과 네 개 헤드](docs/assets/joint-encoder-ko.svg)
+
+모든 행에 같은 인코더를 쓰고, 각 행의 벡터에 출처 종류·후보 위치·경과 시간·순서를 더합니다. 어느 원본 행이 근거인지 지도학습하며 근거를 선택하지 않은 경우도 출력에 남깁니다. [편집 가능한 상세도](docs/assets/joint-encoder.drawio) · [구현 코드](equip_triage/joint/model.py)
+
+합성 기록 288건의 CPU 파일럿에서 첫 점검 macro-F1은 영어 0.228, 한국어 0.214였습니다. 같은 자료에서 규칙은 두 언어 모두 1.000, 문자·이벤트 기준선은 0.623과 0.641이었습니다. 결합 인코더가 정답 로그 행을 찾은 건수는 양 언어 각각 248건 중 116건입니다. 현장 성능과 신규 결합 모델의 본 규모 CUDA 성능은 아직 측정되지 않았습니다. [비교 수치와 한계](research/joint_encoder/REPORT.md)
 
 ## CSV 로그 검토
 
@@ -16,7 +43,7 @@ python app.py --serve
 
 [한국어 화면](http://127.0.0.1:8765/?lang=ko)에서 `SIM-A / LOT-001`을 열면 순번 6 누락과 순번 7 충돌을 확인할 수 있습니다. CSV 열은 `equipment,lot,sequence,time,code,memo`이며, [예제 CSV](examples/events.csv)가 기본값입니다. 내 파일은 `python app.py --input path/to/events.csv --serve`로 열 수 있습니다. `python app.py --json`은 같은 검토 결과를 JSON으로 출력합니다.
 
-**현재 연결 범위:** 이 화면에서 이벤트와 원문 메모를 같이 볼 수 있고, 경고 코드와 메모 키워드는 규칙으로 처리합니다. 아래 트랜스포머는 별도 실행 경로입니다. 등록된 점검 두 건과 메모 두 줄을 받아 후보별로 지속·해소·불명을 추정합니다. CSV 이벤트 순서를 어텐션에 넣거나 두 판정을 합치는 기능은 아직 없습니다.
+CSV 뷰어는 기존 재생 로직과 메모 키워드 규칙을 사용합니다. 결합 API의 JSONL에는 자료 수신 시점, 등록 후보와 채널 관측값이 필요합니다. 아래 메모 전용 모델은 등록된 후보와 메모 두 줄을 입력으로 받습니다.
 
 ## 메모 모델 실행
 

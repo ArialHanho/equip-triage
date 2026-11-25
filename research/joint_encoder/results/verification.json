@@ -1,0 +1,77 @@
+{
+  "cli_and_api": {
+    "actions": [
+      "hold",
+      "hold",
+      "hold",
+      "data"
+    ],
+    "candidate_shape": [
+      1,
+      2,
+      32
+    ],
+    "cited_ids_scoped": true,
+    "duplicate_conflict_hold": true,
+    "file_stdin_and_serialized_api_exact": true,
+    "invalid_hold": true,
+    "modality_controls": {
+      "log_only": {
+        "max_state_or_direct_logit_change": 0,
+        "pairs": 16
+      },
+      "memo_only": {
+        "max_state_or_direct_logit_change": 0,
+        "pairs": 16
+      }
+    }
+  },
+  "diagrams": {
+    "all_svg_labels_and_edge_counts_match_the_editable_pages": true,
+    "drawio_pages_per_source": 2,
+    "encoder": {
+      "edges_per_language": 16,
+      "vertices_per_language": 18
+    },
+    "overview": {
+      "edges_per_language": 15,
+      "vertices_per_language": 14
+    },
+    "visual_review_width_px": 700
+  },
+  "frozen_base": "53a8345290ba884c47bc9b4930ab1785c8f98d62",
+  "frozen_entrypoints": {
+    "csv_app": {
+      "bytes": 10045,
+      "matches_preserved_pre_joint_output": true,
+      "sha256": "daa8e75192d4c25fddfc3de32b5402258722aa40e476279349c63d8d07a624e8"
+    },
+    "frozen_model_sha256": "a7365b5a09e29fb3bd832940f575a7be069ad3712a4ee318c31be12624089101",
+    "memo_model": {
+      "bytes": 1628,
+      "matches_preserved_pre_joint_output": true,
+      "sha256": "ce4551dc1c6f6fddcc2a0e607b70b9fa7e437aee77816ecb41405fd69d396017"
+    },
+    "tracked_runtime_examples_and_weights_match_base_git_objects": true
+  },
+  "notebook": {
+    "cells": 14,
+    "compiled": 8,
+    "cpu_notebook_guard": true,
+    "cuda_only_main_fit_guard": true,
+    "embedded_zip_sha256": "045b3c10a030971a7720da26d2ff269a484b0c776c1b2a8b677fe609f7cd2dbb",
+    "nbformat": "5.10.4",
+    "outputs": 0,
+    "regenerated_main_manifest_sha256": "5d43db74fe2afec1de4be0907281155d90557947a387f5eedda0b13ed168f022",
+    "source_files_byte_exact": 20
+  },
+  "wheel": {
+    "example_count": 4,
+    "installed_cli_byte_identical_to_checkout": true,
+    "installed_wheel": "equip_triage-0.1.0-py3-none-any.whl",
+    "main_hash_validation_cell_exact": true,
+    "offline": true,
+    "prediction_sha256": "6f48610f274ecaf0a4305e7b07b5c018b11147e7a663dc9cc55a80e56c1c332b",
+    "source_restoration_cell": true
+  }
+}

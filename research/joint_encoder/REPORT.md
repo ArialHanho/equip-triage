@@ -1,0 +1,49 @@
+# Can a log row change the interpretation of a bilingual work note?
+
+This study asks whether a note identifying a measurement channel helps a native equipment encoder choose the right log row and first check. A scoped rule scored 1.000 macro-F1 in both languages on the small CPU pilot. The memo-conditioned Transformer reached 0.228 in English and 0.214 in Korean. It usually identified the current memo line and frequently chose the wrong telemetry row. The larger CUDA comparison is prepared, with the validation protocol and final set frozen. Its outcome is pending. [Protocol](protocol.md) · [Model and API](../../docs/JOINT_ENCODER.md)
+
+## Why these inputs
+
+Veloso and colleagues aligned train-compressor telemetry with maintenance reports to identify three major failures in their MetroPT study. Those retrospective reports help establish ground truth. A report written after an incident cannot be treated as a contemporaneous observation here. The authors' related MetroPT2 release describes time-stamped sensor streams and maintenance interventions. Neither the article nor that release supplies matched English/Korean pre-cutoff observation lines, two registered candidates, and first-check adjudication for this task. [MetroPT primary study](https://www.nature.com/articles/s41597-022-01877-3) · [Creators' MetroPT2 data record](https://zenodo.org/records/7766691)
+
+Zhou and colleagues linked incoming IT events to resolutions from historical service tickets, accounting for misleading resolutions. Their target and domain differ, but the timing distinction matters here. MaintNet documents short, abbreviation-heavy maintenance logbook text, and NIST Nestor documents maintenance work-order descriptions and annotations. We found no compatible paired field gold among these sources. All equipment IDs, records, translations, errors and targets in this study were generated locally. No external work-order or log data were copied or redistributed. [Event-ticket study](https://dl.ifip.org/db/conf/im/im2015/137339.pdf) · [MaintNet](https://aclanthology.org/2020.coling-demos.2/) · [NIST Nestor](https://pages.nist.gov/nestor/nestor/datasets/)
+
+MulT uses directional cross-modal attention, so conditioning one source on another is established prior work. Our comparison tests whether it adds value in a specific two-check schema against a parallel reader with identical parameters. ERASER distinguishes matching annotated evidence from faithfulness. We supervise source pointers, score exact row/line hits and use paired input changes. A retrieved source ID is a model prediction. Its score alone does not establish a causal account of an actual fault. [Tsai et al., ACL 2019](https://aclanthology.org/P19-1656/) · [DeYoung et al., ACL 2020](https://aclanthology.org/2020.acl-main.408/)
+
+## Paired synthetic design
+
+A registered tag and domain narrow the check candidates. Each log channel has an earlier and a later binary observation. Each candidate has a previous and a current note. The note identifies a channel and reports an independent observation. Agreement on out-of-band or in-band evidence gives continuing or cleared respectively. Disagreement or insufficient evidence gives unknown, and structural gaps or conflicts independently veto a release. The same equipment/lot, translation pair and all interventions stay within the same partition.
+
+The pilot has 432 training rows in 12 bilingual panels across four wordings and 288 held-out pilot rows in eight panels across two other wordings. Each scored language has 40 actionable records and 104 true holds. The prepared main split has 6,912/1,152/2,880 rows in 192/32/72 bilingual panels with 8/4/6 disjoint wording families. The final set additionally includes two withheld variants: disagreement at both candidates, and a late-arriving current memo with a stale predecessor. Each language has 90 actions per domain and 1,080 holds in that set. Each wording family has one authored English frame and one Korean counterpart. Recombination and paired interventions do not create independent technicians or field procedures.
+
+For each panel, changing only a memo and changing only a log row produce different gold decisions while the other modality is byte-equivalent in canonical model features. A separate pair exchanges the order of two readings and preserves the event-value multiset. The main final audit checks 288 single-modality pairs and 144 order pairs; its canonical labeled SHA-256 is `7b982fe68524ed9034d5990767370b09cf1710a2b6e1ff7a82a401bf445cfb36`. Reordering physical input rows and altering excluded future/late/wrong-lot/repair data leaves the visible snapshot fixed. [Data generator](data.py) · [Audit](audit.py) · [Main manifest](results/main-manifest.json)
+
+## CPU pilot at fixed cutoff 0.50
+
+All neural arms start from the same seed and have 44,453 parameters. Each sees the same 432 packets twice, in 54 AdamW updates. The direct control uses first-check supervision only. Other native arms receive per-candidate states, supervised source pointers for visible modalities and the auxiliary direct decision. The same structural guard and release threshold apply throughout. Character 2–5-gram logistic regression includes raw note text, observed event sequences and text × current channel-band feature interactions. Its reported source references use the scoped parser independently of its classifier. Source-pointer hit rates on this arm therefore measure the rule-based citation path.
+
+| Arm | EN first-check macro-F1 | KO first-check macro-F1 | Gold holds released EN / KO, each out of 104 |
+|---|---:|---:|---:|
+| Scoped rule | 1.000 | 1.000 | 0 / 0 |
+| Character + event interactions | 0.623 | 0.641 | 5 / 7 |
+| Character, logs only | 0.433 | 0.433 | 7 / 7 |
+| Character, memo only | 0.399 | 0.449 | 7 / 16 |
+| Direct selection, pooled | 0.168 | 0.168 | 0 / 0 |
+| Native pooled concatenation | 0.202 | 0.198 | 0 / 1 |
+| Native parallel readers | 0.265 | 0.298 | 23 / 26 |
+| Native conditioned, binding removed | 0.279 | 0.279 | 6 / 6 |
+| Native logs only | 0.343 | 0.343 | 23 / 23 |
+| Native memo only | 0.168 | 0.168 | 0 / 0 |
+| Native bound, memo-conditioned log reader | 0.228 | 0.214 | 23 / 28 |
+
+The conditioned model correctly identified the annotated memo line in 264/264 non-null cases and the annotated log row in 116/248 per language. It passed 0/8 matched channel-switch pairs and 0/8 memo-claim-only pairs in each language. State macro-F1 was 0.365/0.376. The English/Korean model routed 38/144 and 46/144 records, with 9 correct checks in each language and 6/9 wrong-domain checks. Before the structural veto, the model incorrectly released 43 English and 50 Korean true holds. The veto reduced those counts to 23 and 28. The direct control's zero releases came with zero coverage. The parameter-matched parallel reader scored higher than the conditioned reader in both languages. The deterministic rule has exact knowledge of the limited status terms and strong scope cues in this pilot. The result supports neither a learned-model advantage nor a validated field decision. [All metrics, slices and contrasts](results/pilot-evaluation.json.gz) · [Pilot data manifest](results/pilot-manifest.json) · [Per-arm training receipts](results/pilot-fits.json)
+
+## Pretrained and Colab readiness
+
+A real multilingual DistilBERT checkpoint includes English and Korean and has an Apache-2.0 model card. We downloaded five pinned, checksum-verified documents and model assets. On CPU its 134,776,965-parameter comparison model completed **one** AdamW update on 16 training records (seven English, nine Korean). The first pretrained Q projection changed by 0.0000201 in maximum absolute weight. No final metric is reported for that comparison. A generic tokenizer warning from Transformers 4.57.3 prompted direct comparison with the released tokenizer JSON. All 4,952 distinct visible strings across pilot and main generated exactly the same token IDs, with a maximum of 26 WordPieces including boundaries. [Public pretraining source](https://huggingface.co/distilbert/distilbert-base-multilingual-cased/tree/45c032ab32cc946ad88a166f7cb282f58c753c2e) · [Distillation method](https://arxiv.org/abs/1910.01108) · [Actual CPU receipt](results/public-smoke.json)
+
+Native CPU pause/restart after step three reproduced every final model and AdamW tensor through step 54. The installed wheel reproduced all four local CLI responses byte-for-byte. Regenerating all three main splits from the notebook archive reproduced the recorded hashes. [Runtime and notebook checks](results/verification.json)
+
+The combination model's full CUDA fits and independent matched evaluation have no measured scores in this report. Seed 17 is the primary comparison, with 41 and 73 reserved as replications. Main evaluation opens only after every native arm, the public comparator and all baseline validation calibrations are sealed. The proposed success test requires higher first-check macro-F1 **and** no increase in gold-hold releases for both languages against the strongest prespecified alternative selected on validation. Paired uncertainty is calculated over six held-out wording families. The existing memo-only 10K–200K study addresses a different task. [Restart evidence](results/resume-proof.json) · [Notebook](../../notebooks/equip-triage-joint-colab.ipynb) · [Full Colab commands](../../docs/JOINT_ENCODER.md)
+
+The structured data use two registered checks, two channels, a binary band and a short age limit. The generator shares these primitives, and some words, across all partitions. Available/observed times and note ownership are supplied reliably in these synthetic examples. Missing source metadata, free-form multiauthor references, calibrated field prevalence and verified intervention outcomes remain outside the measured evidence.
