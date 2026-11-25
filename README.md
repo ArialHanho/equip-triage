@@ -1,107 +1,62 @@
 **English** · [한국어](README.ko.md)
 
-![Equip Triage: inspection log replay and from-scratch sequence models](docs/assets/banner.svg)
+# Equip Triage
 
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](#quickstart)
-[![License: MIT](https://img.shields.io/badge/License-MIT-2CA58D)](LICENSE)
-[![Open 30K benchmark in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ArialHanho/equip-triage/blob/main/notebooks/equip-triage-v03-30k.ipynb)
+![Equip Triage](docs/assets/banner.svg)
 
-Replay inspection logs without losing the original evidence. Then test whether **an encoder built from scratch** can recognize unusual event context that simpler methods miss.
+**Offline inspection-log review and from-scratch Transformer research for equipment event sequences.**
 
-## External comparison: custom encoder, Google BERT and a local LLM
+Replay an equipment CSV by machine and lot. Flag duplicate, late, missing, and conflicting records. Show the original rows behind a review or hold so an operator can inspect the equipment record before drawing a process conclusion.
 
-![Synthetic detection by fault slice, false alerts and CPU throughput: the projected custom encoder, projected BERT-Mini and precedence rule tied at 192/192 with zero false alerts](docs/assets/external-benchmark.png)
+[Quickstart](#quickstart) · [Model architecture](#model-architecture) · [Benchmarks](#benchmarks) · [Research roadmap](#research-roadmap)
 
-On raw traces, pretrained BERT-Mini caught **81/192** order faults versus **3/192** for the custom order head (seed 42), but it caught **0/96** of the held-out fault type. We changed the input, not the backbone size: a filter fitted only on normal training logs retained stable milestones and discarded intermittent telemetry. Both the custom head **and** BERT-Mini then caught **192/192 with zero false alerts**. The simpler learned precedence rule matched their accuracy and was faster.
-
-The projected inputs contain only two allowed normal workflows, both seen during training. This is evidence for the representation change on a controlled synthetic study, not for superiority over BERT or LLMs generally. The SmolLM2 run is a frozen four-shot comparison, not a fine-tuned baseline. Neither this comparison nor the upgrade was run on production logs.
-
-[Vector figure (SVG)](docs/assets/external-benchmark.svg) · [Results, protocol and reproduction](research/external-comparison/README.md) · [Chart data](research/external-comparison/metrics.csv) · [Checkpoint provenance](research/external-comparison/sources.json)
-
-## What belongs in software, and what belongs in a model?
-
-| Layer | Responsibility | Status |
-| --- | --- | --- |
-| **Log replay** | Parse CSV, preserve source rows, canonicalize timestamps to UTC, isolate equipment/lot streams, and flag duplicates, gaps, or conflicts. | Runnable local app using Python and SQLite. |
-| **Sequence baselines** | Learn normal event order with a trigram and a hand-built causal Transformer. Compare both with an explicit state machine and shared timing/sequence rules. | Evaluated on 30,000 synthetic sessions. |
-| **BERT-style encoder** | Implement token and position embeddings, multi-head Q/K/V attention, feed-forward layers, residuals, normalization, and a masked-event head. Train from random initialization. | [Backbone and masked-event diagnostic](research/public-logbert/SYNTHETIC_MLM.md) implemented and tested. Evaluated on public HDFS traces; see the comparison below. |
-
-The causal model predicts the **next event from its prefix**. The BERT-style objective reconstructs a **masked event using both sides** of a completed sequence. The latter is for retrospective triage, not live alarms or online early detection. Event IDs are the tokens; this is not a Korean language model. Neither research model is wired to the replay app. No pretrained checkpoints are required.
+![Two separate paths: equipment CSV to evidence review; event IDs to a two-block encoder with masked-event and order heads. External models run only as comparisons.](docs/assets/architecture-en.svg)
 
 ## Quickstart
 
-From the repository root, use Python 3.11+; the replay app has no external dependencies.
+From the repository root, run with Python 3.11+; the replay app requires no external dependencies.
 
 ```sh
 python app.py --serve
-```
-
-Open the [English dashboard](http://127.0.0.1:8765/) or switch to [한국어](http://127.0.0.1:8765/?lang=ko). Language switching keeps the selected equipment and lot. Stop with Ctrl+C. The bundled CSV is synthetic. Rows for the same lot ID on different machines stay separate; select a flagged stream to inspect the original record.
-
-```sh
 python app.py --json
-python app.py --input examples/events.csv --serve --port 8766
 ```
 
-The CSV header is `equipment,lot,sequence,time,code,memo`. Use UTF-8, an offset-aware timestamp (or `Z`), and sequence numbers starting at 1 for each equipment/lot pair. The app replays a file into an in-memory database; it is not a live collector, permanent historian, or equipment controller.
+Open the [English dashboard](http://127.0.0.1:8765/) or [한국어](http://127.0.0.1:8765/?lang=ko). Select **SIM-A / LOT-001** to inspect why the app returns **Hold**: sequence 6 is missing and two records disagree at sequence 7. The input is a [synthetic fixture](examples/events.csv). For another file, use `python app.py --input path/to/events.csv --serve` with UTF-8 and columns `equipment,lot,sequence,time,code,memo`. Timestamps need a UTC offset and each equipment/lot stream starts at sequence 1.
 
-## Order-aware upgrade: when counts miss the fault
+The app is an offline Python/SQLite replay, not a live collector or controller. The UI and evidence review do not invoke a research model.
 
-When an inspection tool records all expected events but performs them out of order, event counts cannot distinguish the fault. In 400 matched test pairs, the upgraded encoder adds a 33-parameter order head to the original two-layer masked-event model. Both models start from scratch. It scores a completed sequence in one encoder pass rather than separately masking and rescoring every event.
+## Model architecture
 
-| Method | Reversals caught / 400 | False alarms / 400 normal |
-| --- | ---: | ---: |
-| Event counts | 0 | 0 |
-| Trigram | 303 | 1 |
-| Original masked-event model, 3 initializations | 88–234 | 3–4 |
-| Masked-event model + order head, 3 initializations | 399–400 | 4–6 |
-| Learned precedence rule | 400 | 0 |
+| Component | Role |
+| --- | --- |
+| [Event encoder](research/public-logbert/bert_mlm.py) | Discrete event IDs plus learned position embeddings; two Transformer blocks by default, width 32 and four attention heads. The repository implements Q/K/V projection, scaled dot-product attention with padding masking, and residual/LayerNorm around attention and the GELU feed-forward block using PyTorch primitives. |
+| [Masked-event head](research/public-logbert/bert_mlm.py) | Predict a hidden event from both sides of a completed sequence; score anomalies by mean leave-one-out prediction loss. Train the reference encoder from random initialization. |
+| [Order head](research/order-aware/study.py) | Add a 33-parameter linear scorer to the contextual `START` vector. Train with masked-event loss on normal sequences and binary classification on matched normal/reordered pairs; score a sequence in one encoder pass. |
+| [External models](research/external-comparison/README.md) | Google BERT-Tiny/Mini act as comparison encoders; frozen SmolLM2-135M-Instruct is a four-shot decoder-only comparison. The project encoder requires neither model nor a pretrained checkpoint. |
 
-The upgrade improved detection versus the original model at thresholds fixed on validation normals. The simpler rule won on the synthetic fixed-order workflow. Use verified rules for known interlocks; test learned scoring where valid order varies. These are generated equipment traces, not HDFS or production results.
+The order head targets **illegal order with unchanged event counts**. The bidirectional model looks at completed sequences for retrospective review; the separate causal baseline predicts the next event from its prefix. Event IDs are not natural-language tokens. The dashboard supports Korean text, but the sequence encoder is not a Korean language model or an LLM.
 
-[Why we built it](docs/WHY_ORDER.md) · [Full results and reproduction](research/order-aware/README.md) · [Implementation](research/order-aware/study.py)
+## Benchmarks
 
-## Measured: 30,000 public HDFS blocks
+![External benchmark: detection by fault type, false alerts, and batch CPU throughput. With the milestone filter, the custom model, BERT-Mini, and learned precedence each detect 192/192 faults with zero false alerts.](docs/assets/external-benchmark.png)
 
-The same split and validation-only threshold rule were used for every method. The train/validation/test caps were 24,000 / 3,000 / 3,000. The table below is seed 42.
+| Evaluation | Result and scope |
+| --- | --- |
+| [400 synthetic order-fault pairs](research/order-aware/README.md) | Event counts detect 0/400. The original masked model detects 88–234/400 across three seeds; adding the order head yields 399–400/400 with 4–6 false alerts on 400 normals. The learned precedence rule yields 400/400 and zero false alerts on this fixed grammar. |
+| [192 synthetic pairs: two valid workflows](research/external-comparison/README.md) | Raw traces: custom order head 3/192, pretrained BERT-Mini 81/192 and frozen SmolLM2 3/192 (seed 42 comparison). A normal-train-only milestone filter brings the custom encoder and BERT-Mini to 192/192 with zero false alerts, matching the faster precedence rule. Both valid workflows are already present during training. Only one fault type is withheld, not a normal recipe. |
+| [30,000 public Hadoop HDFS blocks](research/public-logbert/RESEARCH.md) | In the main split, the count baseline reaches AP 0.9247 versus 0.6517 for the masked encoder; counts also lead on the second split. HDFS is authentic IT telemetry, not factory equipment data. |
+| [30,000 synthetic equipment sessions](research/v03/RESEARCH.md) | The state machine plus numeric rules detects 150/150 injected faults with 0/2,850 false alerts; the causal Transformer plus the same numeric rules detects 150/150 with 98 false alerts in the Linux CPU run. |
 
-| Method | Test AP ↑ | Caught ↑ | False alarms ↓ |
-| --- | ---: | ---: | ---: |
-| Nearest normal event counts | 0.9247 | 62/62 | 3/2,938 |
-| Bidirectional masked encoder | 0.6517 | 60/62 | 53/2,938 |
-| Causal Transformer (same size) | 0.5726 | 41/62 | 43/2,938 |
-| Trigram | 0.3485 | 32/62 | 54/2,938 |
-| Unigram | 0.3480 | 35/62 | 53/2,938 |
+[Vector chart](docs/assets/external-benchmark.svg) · [Metrics CSV](research/external-comparison/metrics.csv) · [30K synthetic notebook](notebooks/equip-triage-v03-30k.ipynb) · [Data provenance](docs/EVALUATION.md)
 
-**Nearest normal event counts had the highest AP in the main run.** The masked encoder reached AP 0.6517 versus 0.9247 for the counter of event IDs. Event counts also won the second split (AP 0.9757). The masked encoder beat the same-size causal model in the main run but lost in the second (AP 0.5047 vs. 0.7682). None of the test anomalies in either split shared an exact count vector with a normal training block.
+**Finding:** The choice of event representation can matter more than the model. Neither the order head nor the milestone filter shows an advantage over a simple rule on the tested grammar. No industrial detection or yield claim follows from these experiments.
 
-[Full metrics, order-shuffle control, second split and commands](research/public-logbert/RESEARCH.md) · [What was implemented and how it was tested](docs/IMPLEMENTATION.md)
+## Research roadmap
 
-This is Hadoop IT telemetry supplied as preprocessed event traces, not a semiconductor field evaluation. [Data provenance](docs/EVALUATION.md) also explains why SECOM is a separate tabular task.
+1. **Hold out entire normal recipes.** Exclude at least one legal recipe family from training and threshold calibration. Pair legal and invalid traces with the same counts, and include a case where `ACK` is optional in one recipe but required in another. Freeze the threshold on validation normals; report recall, false alerts by recipe, and CPU scoring cost. Compare count, trigram, learned precedence, and the same-size encoder on the same splits.
+2. **Isolate the architecture change.** Relative position in attention is [prior work](https://arxiv.org/abs/1803.02155); the question here is whether event timing helps equipment triage. Compare standard QKV with a small relative event-distance/time-gap bias, keeping training data and budget fixed. Compare against an input-only time-gap version and recipe-conditioned precedence. An architectural contribution requires measurable improvement on unseen legal recipes at a comparable false-alert rate. Treat this as a proposal, not an implemented model.
+3. **Add industrial evidence separately.** Evaluate an offline sensor replay candidate from the [PHM Society 2018 ion-mill challenge](https://phmsociety.org/conference/annual-conference-of-the-phm-society/annual-conference-of-the-prognostics-and-health-management-society-2018-b/phm-data-challenge-6/) once access and reuse terms are verified. Compare a maintenance window with same-tool, same-recipe reference windows. Its labels mark maintenance shutdowns, not the onset of faults or illegal recipe order. Keep sensor-replay results separate from the order benchmark.
 
-## Measured: 30,000 synthetic equipment sessions
+[Implementation notes](docs/IMPLEMENTATION.md) · [Contribution guide](CONTRIBUTIONS.md) · [License](LICENSE)
 
-24,000 normal train sessions, 3,000 validation, 3,000 test; 766,290 event rows total. The test set has 150 injected anomalies and 2,850 normal sessions. Fix each threshold on validation normals (target false-alarm rate ≤1%), then apply it unchanged to test.
-
-| Method | Test AP ↑ | Anomalies caught ↑ | False alarms ↓ |
-| --- | ---: | ---: | ---: |
-| Trigram, events only | 0.2924 | 38/150 | 0/2,850 |
-| Causal Transformer, events only | 0.5063 | 70/150 | 98/2,850 |
-| Trigram + shared numeric rules | 0.8315 | 123/150 | 0/2,850 |
-| Causal Transformer + shared numeric rules | 1.0000 | 150/150 | 98/2,850 |
-| State machine + numeric rules | 1.0000 | 150/150 | 0/2,850 |
-
-These are the [committed Linux CPU results](research/v03/results-30k.json). The Colab CPU run reproduced the AP and recall shown here with 97 Transformer false alarms instead of 98. **The state machine performed best at the chosen operating point.** It knows the generator grammar; the Transformer ranked this synthetic test perfectly with numeric rules but still fired on normal sessions at the threshold chosen on validation. That is not evidence of a production yield gain or field accuracy. See the [experiment protocol](research/v03/RESEARCH.md).
-
-## Measured: can the encoder use right context?
-
-A two-block, 26,867-parameter BERT-style encoder recovered 128/128 masked targets on held-out synthetic sequences when it could see the later cue, versus 32/128 when the cue was masked too. The cue is sufficient by design, so a lookup table could also solve this probe. This checks a property of the implementation, not anomaly-detection performance.
-
-[Encoder code](research/public-logbert/bert_mlm.py) · [Method and reproduction](research/public-logbert/SYNTHETIC_MLM.md) · [Results](research/public-logbert/synthetic-results.json)
-
-## Repository map
-
-- [Project index](INDEX.md) · [Original causal and memo baselines](research/RESEARCH.md) · [Contribution guide](CONTRIBUTIONS.md)
-- [30K experiment code](research/v03/scale_pilot.py) · [Notebook](notebooks/equip-triage-v03-30k.ipynb) · [Results](research/v03/results-30k.json)
-
-MIT applies to repository code and original synthetic fixtures, not third-party datasets. No proprietary manufacturing data, live equipment integration, or production validation is included.
+MIT covers repository code and original synthetic fixtures, not third-party data or checkpoints.

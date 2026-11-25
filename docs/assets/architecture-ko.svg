@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="410" viewBox="0 0 800 410" role="img" aria-labelledby="title desc">
+<title id="title">Equip Triage 구조</title>
+<desc id="desc">장비 로그 재생과 연구용 인코더의 분리 구조.</desc>
+<defs><marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 8 4 0 8z" fill="#47617a"/></marker></defs>
+<rect x="1" y="1" width="798" height="408" rx="18" fill="#fff" stroke="#d8e3ee"/>
+<text x="32" y="35" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="16" fill="#17314e" font-weight="650" text-anchor="start">01  ·  장비 로그 재생</text>
+<rect x="32" y="50" width="205" height="62" rx="10" fill="#f5f8fc" stroke="#c6d4e3"/>
+<text x="134.5" y="75" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="18" fill="#17314e" font-weight="650" text-anchor="middle">장비 로그 CSV</text>
+<text x="134.5" y="97" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="15" fill="#17314e" font-weight="400" text-anchor="middle">장비 / LOT / 순번</text>
+<rect x="279" y="50" width="235" height="62" rx="10" fill="#f5f8fc" stroke="#c6d4e3"/>
+<text x="396.5" y="75" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="18" fill="#17314e" font-weight="650" text-anchor="middle">정규화 및 기록 검사</text>
+<text x="396.5" y="97" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="15" fill="#17314e" font-weight="400" text-anchor="middle">UTC 변환 · 누락 · 중복 · 충돌</text>
+<rect x="556" y="50" width="212" height="62" rx="10" fill="#e7f2fe" stroke="#8eb9e6"/>
+<text x="662.0" y="75" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="18" fill="#17314e" font-weight="650" text-anchor="middle">검토 근거 표시</text>
+<text x="662.0" y="97" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="15" fill="#17314e" font-weight="400" text-anchor="middle">점검 후보 / 보류 + 원본 행</text>
+<path d="M240 81 L273 81" fill="none" stroke="#47617a" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M517 81 L550 81" fill="none" stroke="#47617a" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M32 139H768" stroke="#d8e3ee"/>
+<text x="32" y="172" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="16" fill="#17314e" font-weight="650" text-anchor="start">02  ·  이벤트 순서 연구 (앱과 별도 실행)</text>
+<rect x="32" y="191" width="205" height="67" rx="10" fill="#f5f8fc" stroke="#c6d4e3"/>
+<text x="134.5" y="216" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="18" fill="#17314e" font-weight="650" text-anchor="middle">이벤트 ID</text>
+<text x="134.5" y="238" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="15" fill="#17314e" font-weight="400" text-anchor="middle">토큰 임베딩 + 위치 임베딩</text>
+<rect x="279" y="191" width="235" height="67" rx="10" fill="#e7f2fe" stroke="#8eb9e6"/>
+<text x="396.5" y="216" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="18" fill="#17314e" font-weight="650" text-anchor="middle">공유 인코더 블록 ×2</text>
+<text x="396.5" y="238" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="15" fill="#17314e" font-weight="400" text-anchor="middle">4헤드 QKV 어텐션 + MLP</text>
+<rect x="556" y="184" width="212" height="60" rx="10" fill="#f5f8fc" stroke="#c6d4e3"/>
+<text x="662.0" y="209" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="18" fill="#17314e" font-weight="650" text-anchor="middle">마스킹 이벤트 헤드</text>
+<text x="662.0" y="231" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="15" fill="#17314e" font-weight="400" text-anchor="middle">가린 이벤트 ID 복원</text>
+<rect x="556" y="262" width="212" height="60" rx="10" fill="#f5f8fc" stroke="#c6d4e3"/>
+<text x="662.0" y="287" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="18" fill="#17314e" font-weight="650" text-anchor="middle">순서 분류 헤드</text>
+<text x="662.0" y="309" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="15" fill="#17314e" font-weight="400" text-anchor="middle">START 표현 → 순서 점수 1개</text>
+<path d="M240 223 L273 223" fill="none" stroke="#47617a" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M515 224 H535 V214 H550" fill="none" stroke="#47617a" stroke-width="2" marker-end="url(#arr)"/>
+<path d="M535 224 V292 H550" fill="none" stroke="#47617a" stroke-width="2" marker-end="url(#arr)"/>
+<text x="32" y="292" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="15" fill="#17314e" font-weight="400" text-anchor="start">블록 내부: QKV → 스케일 내적 → softmax → V</text>
+<text x="32" y="317" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="15" fill="#17314e" font-weight="400" text-anchor="start">어텐션과 MLP 각각에 잔차 연결과 LayerNorm 적용.</text>
+<path d="M32 347H768" stroke="#d8e3ee"/>
+<text x="32" y="377" font-family="system-ui, Noto Sans CJK KR, sans-serif" font-size="16" fill="#17314e" font-weight="400" text-anchor="start">BERT-Tiny / BERT-Mini 및 SmolLM2는 외부 비교 실험에만 사용.</text>
+</svg>
