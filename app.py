@@ -167,11 +167,12 @@ def render(report, selected=None, lang="en"):
         return tr("CSV {line}행").format(line=line)
 
     def detail_text(detail):
-        if detail.startswith("invalid literal for int()"):
+        if detail.startswith(("invalid literal for int()", "Exceeds the limit (")):
             return tr("순번을 정수로 읽을 수 없습니다.")
-        if detail.startswith("Invalid isoformat string"):
+        if detail.startswith(("Invalid isoformat string", "month must be", "day is out of range",
+                              "hour must be", "minute must be", "second must be", "offset must be")):
             return tr("시각 형식을 확인하세요.")
-        if detail == "date value out of range":
+        if detail == "date value out of range" or (detail.startswith("year ") and detail.endswith(" is out of range")):
             return tr("시각이 지원 범위를 벗어났습니다.")
         return tr(detail)
 
