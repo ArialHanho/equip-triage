@@ -1,0 +1,30 @@
+{
+  "seed": 42,
+  "torch": "2.9.1+cpu",
+  "device": "cpu",
+  "train_groups": 224,
+  "test_groups": 32,
+  "train_sequences": 896,
+  "test_sequences": 128,
+  "parameters": 26867,
+  "epochs": 16,
+  "last_training_epoch": {
+    "mean_loss": 1.2670169172079666,
+    "selected_tokens": 690
+  },
+  "initial": {
+    "correct": 0,
+    "accuracy": 0.0,
+    "mean_nll_nats": 2.8304481506347656
+  },
+  "trained": {
+    "correct": 128,
+    "accuracy": 1.0,
+    "mean_nll_nats": 0.011756416410207748
+  },
+  "trained_cue_hidden": {
+    "correct": 32,
+    "accuracy": 0.25,
+    "mean_nll_nats": 1.444201111793518
+  }
+}
