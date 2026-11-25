@@ -25,4 +25,4 @@ event IDs [B,T] + position indices
 
 PyTorch supplies tensors, linear/embedding/normalization primitives, loss, automatic differentiation and the optimizer. The code does not use `BertModel`, `TransformerEncoder` or a packaged attention module. This is a compact BERT-style event encoder, not an exact reproduction of the original NLP BERT or the complete LogBERT method.
 
-The upstream HDFS maintainers provided event templates and block labels. This repository does **not** claim to learn an HDFS raw-log parser. See the [contribution guide](../CONTRIBUTIONS.md) for the distinction between reference work and independent contributions.
+The upstream HDFS maintainers provided event templates and block labels. This repository does **not** claim to learn an HDFS raw-log parser. See the [contribution guide](../CONTRIBUTIONS.md) for reproducible extension points and reporting expectations.

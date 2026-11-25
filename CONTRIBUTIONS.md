@@ -1,6 +1,6 @@
 # Contribution guide
 
-The published implementation, synthetic generators, benchmark harness, and tests began as AI-assisted reference work. Do not attribute that work to someone who did not implement or verify it. PyTorch provides tensor primitives, layers, autograd, and the optimizer; the sequence architecture and experiments are not inventions of those underlying methods.
+Keep changes reproducible and document the evaluation conditions. The encoder uses PyTorch tensor operations, layers, autograd, and the optimizer. It does not claim a new Transformer architecture.
 
 Useful follow-up contributions:
 

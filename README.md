@@ -1,8 +1,10 @@
+**English** · [한국어](README.ko.md)
+
 ![Equip Triage: inspection log replay and from-scratch sequence models](docs/assets/banner.svg)
 
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](#quickstart)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2CA58D)](LICENSE)
-[![Open 30K benchmark in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ArialHanho/equip-triage/blob/c08386f3c4d0c7425a5dd8e7e60b259aa575628e/notebooks/equip-triage-v03-30k.ipynb)
+[![Open 30K benchmark in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ArialHanho/equip-triage/blob/main/notebooks/equip-triage-v03-30k.ipynb)
 
 Replay inspection logs without losing the original evidence. Then test whether **an encoder built from scratch** can recognize unusual event context that simpler methods miss.
 
@@ -34,7 +36,7 @@ From the repository root, use Python 3.11+; the replay app has no external depen
 python app.py --serve
 ```
 
-Open [localhost:8765](http://127.0.0.1:8765/). Stop with Ctrl+C. The bundled CSV is synthetic. Rows for the same lot ID on different machines stay separate; select a flagged stream to inspect the original record.
+Open the [English dashboard](http://127.0.0.1:8765/) or switch to [한국어](http://127.0.0.1:8765/?lang=ko). Language switching keeps the selected equipment and lot. Stop with Ctrl+C. The bundled CSV is synthetic. Rows for the same lot ID on different machines stay separate; select a flagged stream to inspect the original record.
 
 ```sh
 python app.py --json

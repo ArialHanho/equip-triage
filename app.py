@@ -118,49 +118,121 @@ def replay(path):
         return dict(batches=result, ingestion=notes)
 
 
-def render(report, selected=None):
+# The report's Korean descriptions are part of the JSON interface. Translate only
+# known UI messages here; pass original memos, codes and keyword matches through.
+ENGLISH = {
+    "검사장비 로그 재현": "Inspection log replay",
+    "합성 데이터 데모": "Synthetic data demo",
+    "로트별 장비 이벤트와 작업 메모를 모아 초기 점검 근거를 보여줍니다.":
+        "Review equipment events and operator notes by lot to decide what to check first.",
+    "표시 언어": "Display language", "장비 및 로트": "Equipment and lot",
+    "판정 보류": "Assessment on hold", "점검 후보": "Review suggested",
+    "코드 경고 없음": "No warning codes", "순번 누락": "Missing sequence numbers",
+    "시작 기록 미확인": "Start record missing", "종료 기록 미확인": "End record missing",
+    "미등록 코드": "Unrecognized code", "동일 순번의 기록 충돌": "Conflicting records for the same sequence number",
+    "기록 시각과 순번 불일치": "Event times disagree with sequence order",
+    "검사 시작": "Inspection started", "기준 샘플 확인": "Reference sample check",
+    "접촉 상태 경고": "Contact warning", "측정": "Measurement", "재검": "Retest",
+    "검사 종료": "Inspection ended", "통신 끊김": "Connection lost",
+    "측정·접촉 확인": "Check measurement or contact", "통신 기록 확인": "Check communication logs",
+    "설정 변경 확인": "Check configuration changes", "분류 보류": "Classification deferred",
+    "점검 근거 부족": "No matching keywords", "여러 점검 항목에 해당": "Keywords match multiple categories",
+    "먼저 확인할 근거": "What to check first", "코드 기준 확인 후보 없음": "No events flagged by code",
+    "순번": "Sequence", "UTC 시각": "Time (UTC)", "이벤트": "Event",
+    "작업 메모 · 키워드 분류": "Operator note · keyword classification", "원본": "Source record",
+    "늦게 도착": "Late arrival", "충돌 (첫 수신 기록 유지)": "Conflict (first record kept)",
+    "중복 제외": "Duplicate excluded", "형식 오류": "Invalid record",
+    "로그 수신 품질": "Log ingestion quality", "수신 품질 이슈 없음": "No ingestion issues",
+    "표시 가능한 이벤트가 없습니다.": "No events to display.",
+    "공정 원인 확정, 품질 판정, 장비 제어를 하지 않습니다.":
+        "For initial review only. The dashboard does not determine root cause, assess product quality or control equipment.",
+    "열이 너무 많습니다.": "Too many columns.",
+    "장비 ID, lot 및 코드는 필수입니다.": "Equipment ID, lot and code are required.",
+    "순번은 양의 64비트 정수여야 합니다.": "Sequence must be a positive 64-bit integer.",
+    "시각에 시간대가 필요합니다.": "Timestamp requires a time zone.",
+    "순번을 정수로 읽을 수 없습니다.": "Sequence is not a valid integer.",
+    "시각 형식을 확인하세요.": "Check the timestamp format.",
+    "시각이 지원 범위를 벗어났습니다.": "Timestamp is outside the supported range.",
+    "CSV {line}행": "CSV row {line}",
+}
+
+
+def render(report, selected=None, lang="en"):
+    lang = "ko" if lang == "ko" else "en"
+
+    def tr(message):
+        return ENGLISH.get(message, message) if lang == "en" else message
+
+    def row_label(line):
+        return tr("CSV {line}행").format(line=line)
+
+    def detail_text(detail):
+        if detail.startswith("invalid literal for int()"):
+            return tr("순번을 정수로 읽을 수 없습니다.")
+        if detail.startswith("Invalid isoformat string"):
+            return tr("시각 형식을 확인하세요.")
+        if detail == "date value out of range":
+            return tr("시각이 지원 범위를 벗어났습니다.")
+        return tr(detail)
+
     views = []
     menu = []
     batches = report["batches"]
     active = next((str(i) for i in range(len(batches)) if str(i) == selected), "0")
+
+    def link(batch, language):
+        return f"/?batch={batch}&amp;lang={language}"
+
+    languages = []
+    for language, name in (("en", "English"), ("ko", "한국어")):
+        current = ' class="selected" aria-current="true"' if language == lang else ""
+        languages.append(f'<a href="{link(active, language)}" lang="{language}" hreflang="{language}"{current}>{name}</a>')
+
     for i, batch in enumerate(batches):
         tag = escape(batch["equipment"] + " / " + batch["lot"])
-        menu.append(f'<a href="/?batch={i}" class="{"selected" if str(i)==active else ""}">{tag}</a>')
+        current = ' class="selected" aria-current="page"' if str(i) == active else ""
+        menu.append(f'<a href="{link(i, lang)}"{current}>{tag}</a>')
         if str(i) != active:
             continue
-        alerts = "".join(f'<li>CSV {x["line"]}행 · {escape(x["text"])}</li>' for x in batch["candidates"]) or "<li>코드 기준 확인 후보 없음</li>"
+        alerts = "".join(f'<li>{row_label(x["line"])} · {escape(tr(x["text"]))}</li>' for x in batch["candidates"])
+        alerts = alerts or f'<li>{tr("코드 기준 확인 후보 없음")}</li>'
         gaps = ", ".join(f'{g["from"]}–{g["to"]}' for g in batch["sequence_gaps"])
-        reason = " · ".join(batch["reasons"]) + (f" ({gaps})" if gaps else "")
+        reason = " · ".join(tr(s) for s in batch["reasons"]) + (f" ({gaps})" if gaps else "")
         rows = []
         for event in batch["events"]:
             memo = escape(event["memo"] or "—")
-            label = escape(event["memo_label"])
-            evidence = escape(event["memo_evidence"])
+            label = escape(tr(event["memo_label"]))
+            evidence = event["memo_evidence"]
+            if event["memo_label"] == "분류 보류":
+                evidence = tr(evidence)
+            evidence = " · " + escape(evidence) if evidence else ""
             raw = escape(json.dumps(event["raw"], ensure_ascii=False, indent=2))
             rows.append(f'<tr><td>{event["sequence"]}</td><td>{escape(event["time"][11:19])}</td>'
-                        f'<td>{escape(event["meaning"])}<small>{escape(event["code"])}</small></td>'
-                        f'<td>{memo}<small>{label} {"· " + evidence if evidence else ""}</small></td>'
-                        f'<td><details><summary>CSV {event["line"]}행</summary><pre>{raw}</pre></details></td></tr>')
+                        f'<td>{escape(tr(event["meaning"]))}<small>{escape(event["code"])}</small></td>'
+                        f'<td>{memo}<small>{label}{evidence}</small></td>'
+                        f'<td><details><summary>{row_label(event["line"])}</summary><pre>{raw}</pre></details></td></tr>')
         status_style = {"판정 보류": "hold", "점검 후보": "warn", "코드 경고 없음": "clear"}[batch["status"]]
-        views.append(f'<section><h2>{tag}</h2><strong class="{status_style}">{escape(batch["status"])}</strong>'
-                     f'<p>{escape(reason)}</p><h3>먼저 확인할 근거</h3><ul>{alerts}</ul>'
-                     '<div class="table"><table><thead><tr><th>순번</th><th>UTC 시각</th><th>이벤트</th>'
-                     '<th>작업 메모 · 키워드 분류</th><th>원본</th></tr></thead><tbody>'
+        headings = "".join(f"<th>{tr(s)}</th>" for s in ("순번", "UTC 시각", "이벤트", "작업 메모 · 키워드 분류", "원본"))
+        views.append(f'<section><h2>{tag}</h2><strong class="{status_style}">{escape(tr(batch["status"]))}</strong>'
+                     f'<p>{escape(reason)}</p><h3>{tr("먼저 확인할 근거")}</h3><ul>{alerts}</ul>'
+                     f'<div class="table"><table><thead><tr>{headings}</tr></thead><tbody>'
                      f'{"".join(rows)}</tbody></table></div></section>')
     kinds = {"late": "늦게 도착", "conflict": "충돌 (첫 수신 기록 유지)", "duplicate": "중복 제외", "invalid": "형식 오류"}
     intake = "".join(
-        f'<li><details><summary>CSV {n["line"]}행 · {kinds[n["kind"]]}'
-        f'{" · " + escape(n["detail"]) if n.get("detail") else ""}</summary>'
+        f'<li><details><summary>{row_label(n["line"])} · {tr(kinds[n["kind"]])}'
+        f'{" · " + escape(detail_text(n["detail"])) if n.get("detail") else ""}</summary>'
         f'<pre>{escape(json.dumps(n["raw"], ensure_ascii=False, indent=2))}</pre></details></li>'
         for n in report["ingestion"]
-    ) or "<li>수신 품질 이슈 없음</li>"
-    return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Equip Triage | 검사장비 로그 재현</title><style>
+    ) or f'<li>{tr("수신 품질 이슈 없음")}</li>'
+    body = "".join(views) or f'<section>{tr("표시 가능한 이벤트가 없습니다.")}</section>'
+    return f'''<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Equip Triage | {tr("검사장비 로그 재현")}</title><style>
     :root{{font-family:system-ui,sans-serif;color:#162845;background:#edf2f7}}body{{margin:0}}header{{background:#12233d;color:#fff;padding:2rem max(5%,calc((100vw - 72rem)/2))}}h1{{margin:.3em 0}}main{{max-width:72rem;margin:auto;padding:1rem}}nav{{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}}nav a{{padding:.5rem 1em;border:1px solid #7590ab;border-radius:.4rem;color:#183552;text-decoration:none}}nav .selected{{background:#173e61;color:white}}section{{background:white;border:1px solid #c2d0dd;border-radius:.7rem;padding:1.2rem;margin-bottom:1rem}}strong{{background:#e1eef9;padding:.4rem .7rem;border-radius:.3rem}}strong.hold{{background:#fde7eb;color:#80172c}}strong.warn{{background:#fff2d3;color:#654300}}strong.clear{{background:#e7f4ed;color:#15593d}}.table{{overflow:auto}}table{{width:100%;border-collapse:collapse;text-align:left}}td,th{{border-bottom:1px solid #e1e8ee;padding:.7em;vertical-align:top}}small{{display:block;color:#466377}}pre{{white-space:pre-wrap;overflow-wrap:anywhere;max-width:22rem}}.eyebrow{{font-size:.85rem;color:#bedcf5}}
-    </style></head><body><header><span class="eyebrow">EQUIP TRIAGE · 합성 데이터 데모</span><h1>검사장비 로그 재현</h1><p>lot별 장비 이벤트와 작업 메모를 모아 초기 점검 근거를 보여줍니다.</p></header>
-    <main><nav aria-label="장비 및 lot">{"".join(menu)}</nav>{"".join(views) or "<section>표시 가능한 이벤트가 없습니다.</section>"}
-    <section><h2>로그 수신 품질</h2><ul>{intake}</ul></section>
-    <p>공정 원인 확정, 품질 판정, 장비 제어를 하지 않습니다.</p></main></body></html>'''
+    </style></head><body><header><span class="eyebrow">EQUIP TRIAGE · {tr("합성 데이터 데모")}</span><h1>{tr("검사장비 로그 재현")}</h1><p>{tr("로트별 장비 이벤트와 작업 메모를 모아 초기 점검 근거를 보여줍니다.")}</p></header>
+    <main><nav aria-label="{tr("표시 언어")}">{"".join(languages)}</nav>
+    <nav aria-label="{tr("장비 및 로트")}">{"".join(menu)}</nav>{body}
+    <section><h2>{tr("로그 수신 품질")}</h2><ul>{intake}</ul></section>
+    <p>{tr("공정 원인 확정, 품질 판정, 장비 제어를 하지 않습니다.")}</p></main></body></html>'''
 
 
 def serve(report, port):
@@ -174,7 +246,8 @@ def serve(report, port):
                 body = json.dumps(report, ensure_ascii=False).encode()
                 content = "application/json"
             else:
-                body = render(report, parse_qs(url.query).get("batch", [None])[0]).encode()
+                query = parse_qs(url.query)
+                body = render(report, query.get("batch", [None])[0], query.get("lang", ["en"])[0]).encode()
                 content = "text/html"
             self.send_response(200)
             self.send_header("Content-Type", content + "; charset=utf-8")
