@@ -1,0 +1,293 @@
+{
+  "data_seed": 20261125,
+  "sizes": [
+    1600,
+    400,
+    400
+  ],
+  "epochs": 10,
+  "torch": "2.9.1+cpu",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "cpu_threads": 1,
+  "runs": [
+    {
+      "pairs": 400,
+      "wins": 0,
+      "ties": 400,
+      "losses": 0,
+      "median_score_difference": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "both_classified_correctly": 0,
+      "by_swap": {
+        "0": {
+          "total": 134,
+          "flagged": 0
+        },
+        "1": {
+          "total": 133,
+          "flagged": 0
+        },
+        "2": {
+          "total": 133,
+          "flagged": 0
+        }
+      },
+      "method": "Counts",
+      "seed": null,
+      "threshold": 7.3783837129967145,
+      "validation_fp": 0,
+      "training_cpu_seconds": 0.0017012080000000651,
+      "test_cpu_seconds": 0.0006699249999999601,
+      "mean_test_cpu_ms_per_trace": 0.0008374062499999502
+    },
+    {
+      "pairs": 400,
+      "wins": 356,
+      "ties": 0,
+      "losses": 44,
+      "median_score_difference": 0.33568615300205973,
+      "tp": 303,
+      "fp": 1,
+      "both_classified_correctly": 302,
+      "by_swap": {
+        "0": {
+          "total": 134,
+          "flagged": 90
+        },
+        "1": {
+          "total": 133,
+          "flagged": 80
+        },
+        "2": {
+          "total": 133,
+          "flagged": 133
+        }
+      },
+      "method": "Trigram",
+      "seed": null,
+      "threshold": 1.8415182370690142,
+      "validation_fp": 4,
+      "training_cpu_seconds": 0.015623562000000035,
+      "test_cpu_seconds": 0.02673714500000024,
+      "mean_test_cpu_ms_per_trace": 0.0334214312500003
+    },
+    {
+      "pairs": 400,
+      "wins": 400,
+      "ties": 0,
+      "losses": 0,
+      "median_score_difference": 1.0,
+      "tp": 400,
+      "fp": 0,
+      "both_classified_correctly": 400,
+      "by_swap": {
+        "0": {
+          "total": 134,
+          "flagged": 134
+        },
+        "1": {
+          "total": 133,
+          "flagged": 133
+        },
+        "2": {
+          "total": 133,
+          "flagged": 133
+        }
+      },
+      "method": "Precedence",
+      "seed": null,
+      "threshold": 0,
+      "validation_fp": 0,
+      "training_cpu_seconds": 0.011214441999999991,
+      "test_cpu_seconds": 0.0033498139999998955,
+      "mean_test_cpu_ms_per_trace": 0.004187267499999869
+    },
+    {
+      "pairs": 400,
+      "wins": 399,
+      "ties": 0,
+      "losses": 1,
+      "median_score_difference": 0.32895347476005554,
+      "tp": 234,
+      "fp": 3,
+      "both_classified_correctly": 231,
+      "by_swap": {
+        "0": {
+          "total": 134,
+          "flagged": 103
+        },
+        "1": {
+          "total": 133,
+          "flagged": 51
+        },
+        "2": {
+          "total": 133,
+          "flagged": 80
+        }
+      },
+      "method": "MLM",
+      "seed": 41,
+      "threshold": 1.2660199403762817,
+      "validation_fp": 4,
+      "training_cpu_seconds": 3.6892453409999995,
+      "test_cpu_seconds": 0.6196503120000001,
+      "mean_test_cpu_ms_per_trace": 0.7745628900000001
+    },
+    {
+      "pairs": 400,
+      "wins": 399,
+      "ties": 0,
+      "losses": 1,
+      "median_score_difference": 10.498290300369263,
+      "tp": 399,
+      "fp": 4,
+      "both_classified_correctly": 395,
+      "by_swap": {
+        "0": {
+          "total": 134,
+          "flagged": 134
+        },
+        "1": {
+          "total": 133,
+          "flagged": 133
+        },
+        "2": {
+          "total": 133,
+          "flagged": 132
+        }
+      },
+      "method": "OrderHead",
+      "seed": 41,
+      "threshold": -2.5017004013061523,
+      "validation_fp": 4,
+      "training_cpu_seconds": 7.715920726000001,
+      "test_cpu_seconds": 0.048570360000001145,
+      "mean_test_cpu_ms_per_trace": 0.06071295000000143
+    },
+    {
+      "pairs": 400,
+      "wins": 400,
+      "ties": 0,
+      "losses": 0,
+      "median_score_difference": 0.3627944588661194,
+      "tp": 215,
+      "fp": 4,
+      "both_classified_correctly": 211,
+      "by_swap": {
+        "0": {
+          "total": 134,
+          "flagged": 103
+        },
+        "1": {
+          "total": 133,
+          "flagged": 18
+        },
+        "2": {
+          "total": 133,
+          "flagged": 94
+        }
+      },
+      "method": "MLM",
+      "seed": 42,
+      "threshold": 1.2686558961868286,
+      "validation_fp": 4,
+      "training_cpu_seconds": 2.6666259639999996,
+      "test_cpu_seconds": 0.6000768000000001,
+      "mean_test_cpu_ms_per_trace": 0.7500960000000001
+    },
+    {
+      "pairs": 400,
+      "wins": 400,
+      "ties": 0,
+      "losses": 0,
+      "median_score_difference": 11.015702962875366,
+      "tp": 400,
+      "fp": 6,
+      "both_classified_correctly": 394,
+      "by_swap": {
+        "0": {
+          "total": 134,
+          "flagged": 134
+        },
+        "1": {
+          "total": 133,
+          "flagged": 133
+        },
+        "2": {
+          "total": 133,
+          "flagged": 133
+        }
+      },
+      "method": "OrderHead",
+      "seed": 42,
+      "threshold": -2.7286946773529053,
+      "validation_fp": 4,
+      "training_cpu_seconds": 7.290765751999999,
+      "test_cpu_seconds": 0.04610653299999967,
+      "mean_test_cpu_ms_per_trace": 0.05763316624999959
+    },
+    {
+      "pairs": 400,
+      "wins": 400,
+      "ties": 0,
+      "losses": 0,
+      "median_score_difference": 0.3866838812828064,
+      "tp": 88,
+      "fp": 4,
+      "both_classified_correctly": 84,
+      "by_swap": {
+        "0": {
+          "total": 134,
+          "flagged": 59
+        },
+        "1": {
+          "total": 133,
+          "flagged": 2
+        },
+        "2": {
+          "total": 133,
+          "flagged": 27
+        }
+      },
+      "method": "MLM",
+      "seed": 43,
+      "threshold": 1.5206937789916992,
+      "validation_fp": 4,
+      "training_cpu_seconds": 2.5878184760000025,
+      "test_cpu_seconds": 0.5776858709999999,
+      "mean_test_cpu_ms_per_trace": 0.7221073387499999
+    },
+    {
+      "pairs": 400,
+      "wins": 400,
+      "ties": 0,
+      "losses": 0,
+      "median_score_difference": 11.477227449417114,
+      "tp": 399,
+      "fp": 4,
+      "both_classified_correctly": 395,
+      "by_swap": {
+        "0": {
+          "total": 134,
+          "flagged": 134
+        },
+        "1": {
+          "total": 133,
+          "flagged": 132
+        },
+        "2": {
+          "total": 133,
+          "flagged": 133
+        }
+      },
+      "method": "OrderHead",
+      "seed": 43,
+      "threshold": -2.0573182106018066,
+      "validation_fp": 4,
+      "training_cpu_seconds": 7.6570703500000015,
+      "test_cpu_seconds": 0.04632393499999665,
+      "mean_test_cpu_ms_per_trace": 0.057904918749995815
+    }
+  ]
+}

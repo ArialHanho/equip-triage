@@ -6,6 +6,8 @@
 
 **Public evidence:** See [30K HDFS results](research/public-logbert/RESEARCH.md) for controls, two split seeds, thresholds and failure cases. See the [implementation map](docs/IMPLEMENTATION.md) for the exact code and test boundaries.
 
-**Next question:** Can any sequence model detect an order-only deviation when counts are identical? Build an order-controlled diagnostic and later test against authorized equipment logs by machine and time. See [sources and evaluation criteria](docs/EVALUATION.md).
+**Order-aware upgrade:** [Matched synthetic reversal benchmark](research/order-aware/README.md): the new head beats the original MLM at the fixed threshold; learned precedence wins the benchmark overall. [Why it exists](docs/WHY_ORDER.md).
+
+**Next question:** How does the order head handle legal alternative paths and reversal patterns excluded from training? Then validate on authorized equipment logs with machine/time splits and operator-reviewed alerts.
 
 **Start here:** [README](README.md) · [Baseline research](research/RESEARCH.md) · [Contribution guide](CONTRIBUTIONS.md) · [Release checklist](RELEASE_CHECKLIST.md).

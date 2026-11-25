@@ -34,6 +34,22 @@ python -m unittest discover -s tests -v
 
 The CSV header is `equipment,lot,sequence,time,code,memo`. Use UTF-8, an offset-aware timestamp (or `Z`), and sequence numbers starting at 1 for each equipment/lot pair. The app replays a file into an in-memory database; it is not a live collector, permanent historian, or equipment controller.
 
+## Order-aware upgrade: when counts miss the fault
+
+When an inspection tool records all expected events but performs them out of order, event counts cannot distinguish the fault. In 400 matched test pairs, the upgraded encoder adds a 33-parameter order head to the original two-layer masked-event model. Both models start from scratch. It scores a completed sequence in one encoder pass rather than separately masking and rescoring every event.
+
+| Method | Reversals caught / 400 | False alarms / 400 normal |
+| --- | ---: | ---: |
+| Event counts | 0 | 0 |
+| Trigram | 303 | 1 |
+| Original masked-event model, 3 initializations | 88–234 | 3–4 |
+| Masked-event model + order head, 3 initializations | 399–400 | 4–6 |
+| Learned precedence rule | 400 | 0 |
+
+The upgrade improved detection versus the original model at thresholds fixed on validation normals. The simpler rule won on the synthetic fixed-order workflow. Use verified rules for known interlocks; test learned scoring where valid order varies. These are generated equipment traces, not HDFS or production results.
+
+[Why we built it](docs/WHY_ORDER.md) · [Full results and reproduction](research/order-aware/README.md) · [Implementation](research/order-aware/study.py)
+
 ## Measured: 30,000 public HDFS blocks
 
 The same split and validation-only threshold rule were used for every method. The train/validation/test caps were 24,000 / 3,000 / 3,000. The table below is seed 42.
