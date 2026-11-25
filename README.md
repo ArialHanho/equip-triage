@@ -2,17 +2,49 @@
 
 # Equip Triage
 
-![Equip Triage](docs/assets/banner.svg)
+Equip Triage includes a **BERT-style Transformer implemented in native PyTorch for English and Korean equipment memos**. Give it two registered checks and two memo lines. It estimates whether each issue continues, has cleared, or has an unknown outcome. It selects a check when exactly one issue continues and the other has cleared. The result includes the state, score and source line for each candidate.
 
-**Offline inspection-log review and from-scratch Transformer research for equipment event sequences.**
+[Train and run](#train-and-run) · [Transformer architecture](#transformer-architecture) · [Python API](docs/MEMO_MODEL.md) · [CSV replay](#csv-replay) · [Supporting evidence](#supporting-evidence)
 
-Replay an equipment CSV by machine and lot. Flag duplicate, late, missing, and conflicting records. Show the original rows behind a review or hold so an operator can inspect the equipment record before drawing a process conclusion.
+## Train and run
 
-[Quickstart](#quickstart) · [Model architecture](#model-architecture) · [Benchmarks](#benchmarks) · [Time-gap attention](#time-gap-attention) · [Bilingual memo routing](#bilingual-memo-routing)
+Run the included [demo checkpoint](models/memo-demo.pt) with Python 3.11+ and PyTorch:
 
-![Two separate paths: equipment CSV to evidence review; event IDs to a two-block encoder with masked-event and order heads. External models run only as comparisons.](docs/assets/architecture-en.svg)
+```sh
+python -m equip_triage predict --model models/memo-demo.pt --input examples/memo-input.jsonl
+```
 
-## Quickstart
+The checkpoint is a **72-record synthetic smoke test**, not the benchmark model or a production release. [SHA-256](models/SHA256SUMS)
+
+From the checkout with Python 3.11+ and PyTorch installed, run:
+
+```sh
+python -m equip_triage train --data examples/memo-train.jsonl --out artifacts/memo.pt
+python -m equip_triage predict --model artifacts/memo.pt --input examples/memo-input.jsonl
+```
+
+The first command trains from random weights on 72 original synthetic packets. The second loads the saved weights and runs the Transformer offline. The five example actions at seed 42 are `data`, `data`, `hold`, `hold`, `hold`. The inputs reuse training phrases to demonstrate both languages, two continuing issues, an unknown reading and a missing line. The confidence cutoff of 0.50 is a fixture setting. [Training records](examples/memo-train.jsonl) · [Input records](examples/memo-input.jsonl)
+
+## Transformer architecture
+
+![Two token lanes rise through embeddings and two shared-weight encoder layers. The training and saved-inference panels show the same network.](docs/assets/memo-transformer-en.svg)
+
+Each memo line gets its own bidirectional context. The encoder implements Q/K/V projections, padding-masked attention, two residual additions, layer normalization and a GELU feed-forward layer in PyTorch. The task-specific readout builds one query per registered check. It restricts that query to the matched line’s memo tokens and uses one shared head to predict three states. The final count and confidence check are deterministic. The diagram’s two panels show supervised state training and inference with the resulting checkpoint. [Editable draw.io source, English and Korean pages](docs/assets/memo-transformer.drawio) · [Model code](equip_triage/model.py) · [BERT Figure 1, visual reference](https://aclanthology.org/N19-1423.pdf#page=3)
+
+```python
+import json
+from pathlib import Path
+from equip_triage import load_checkpoint, predict
+
+model = load_checkpoint("artifacts/memo.pt")
+packet = json.loads(Path("examples/memo-input.jsonl").read_text(encoding="utf-8").splitlines()[0])
+logits, attention = model(model.encode([packet]), return_attention=True)
+print(predict(model, packet)["action"])  # data
+```
+
+[API, tensor shapes, checkpoint format and custom training data](docs/MEMO_MODEL.md)
+
+## CSV replay
 
 From the repository root, run with Python 3.11+; the replay app requires no external dependencies.
 
@@ -25,7 +57,13 @@ Open the [English dashboard](http://127.0.0.1:8765/) or [한국어](http://127.0
 
 The app is an offline Python/SQLite replay, not a live collector or controller. The UI and evidence review do not invoke a research model.
 
-## Model architecture
+## Supporting evidence
+
+The studies below retain their original models, tokenizers and evaluation protocols. In the frozen memo study, the candidate-query BERT recovered 0/112 matched pairs in each language at all three seeds. The package smoke run above measures train/save/load behavior on familiar phrasing. [Frozen memo report](research/candidate-states/REPORT.md)
+
+### Event models
+
+![The CSV replay and the historical event-sequence model.](docs/assets/architecture-en.svg)
 
 | Component | Role |
 | --- | --- |
@@ -36,11 +74,11 @@ The app is an offline Python/SQLite replay, not a live collector or controller. 
 
 The order head targets **illegal order with unchanged event counts**. The bidirectional model looks at completed sequences for retrospective review; the separate causal baseline predicts the next event from its prefix. Event IDs are not natural-language tokens. The dashboard supports Korean text, but the sequence encoder is not a Korean language model or an LLM.
 
-## Bilingual memo routing
+### Bilingual memo routing
 
 When one check still fails and a second check has recovered, the memo can support a single inspection. If both still fail, it calls for review. The offline memo experiment reads two registered checks and two lines of English or Korean. It predicts **continues, cleared or unknown** for each candidate and routes only when one continues and the other is cleared.
 
-![Synthetic worked example of the candidate-query model. Each candidate reads the tokens on its matched memo line, a shared head predicts its state, and a count determines whether to route or hold.](docs/assets/candidate-states-en.svg)
+[Example figure from the earlier experiment](docs/assets/candidate-states-en.svg)
 
 The figure shows the implemented scratch BERT arm using the **expected states** for an example. The model encodes each line separately and restricts candidate-query attention to evidence matched by the visible registry. A uniform-pooling control reads the same tokens. Target-conditioned reading and label queries have prior examples. [Wang et al., 2016](https://aclanthology.org/D16-1058/) · [Liu et al., 2021](https://arxiv.org/abs/2107.10834)
 
@@ -52,7 +90,7 @@ The figure shows the implemented scratch BERT arm using the **expected states** 
 
 Both decisions in a pair must be correct. The fresh synthetic challenge holds out eight wording families. The validation-selected default is the character model. It passes 16/624 English gold holds and 0/624 Korean gold holds to a check. The rule performs best on the challenge. The query encoder holds every case at its selected operating point at all three seeds. The measured benefit comes from predicting states per candidate and counting continuing checks in the character model; learned attention shows no gain here. [Run the bilingual CLI](research/candidate-states/README.md) · [Ablations, uncertainty and coverage](research/candidate-states/REPORT.md)
 
-## Benchmarks
+### Benchmarks
 
 ![External benchmark: detection by fault type, false alerts, and batch CPU throughput. With the milestone filter, the custom model, BERT-Mini, and learned precedence each detect 192/192 faults with zero false alerts.](docs/assets/external-benchmark.png)
 
@@ -67,7 +105,7 @@ Both decisions in a pair must be correct. The fresh synthetic challenge holds ou
 
 **Finding:** The choice of event representation can matter more than the model. Neither the order head nor the milestone filter shows an advantage over a simple rule on the tested grammar. No industrial detection or yield claim follows from these experiments.
 
-## Time-gap attention
+### Time-gap attention
 
 A long wait is legal at one stage and anomalous at another. Can an encoder tell them apart on an unseen procedure when it receives the same events, recipe profile and timestamps? The offline experiment compares two places to use the clock. One adds the preceding gap and elapsed time to each event embedding. The other keeps those inputs and also adds a learned, per-head bias for the signed time difference between events to each QK score before softmax.
 

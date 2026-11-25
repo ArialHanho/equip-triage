@@ -1,0 +1,5 @@
+{"candidates":[{"domain":"data","tag":"L7"},{"domain":"measurement","tag":"P3"}],"memo":"P3 passed again.\nL7 failed again."}
+{"candidates":[{"domain":"data","tag":"L7"},{"domain":"measurement","tag":"P3"}],"memo":"P3 재검 정상.\nL7 재검 불량."}
+{"candidates":[{"domain":"data","tag":"L7"},{"domain":"measurement","tag":"P3"}],"memo":"L7 failed again.\nP3 failed again."}
+{"candidates":[{"domain":"data","tag":"L7"},{"domain":"measurement","tag":"P3"}],"memo":"L7 재검 불량.\nP3 결과 불명."}
+{"candidates":[{"domain":"data","tag":"L7"},{"domain":"measurement","tag":"P3"}],"memo":"L7 failed again."}

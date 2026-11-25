@@ -2,19 +2,49 @@
 
 # Equip Triage
 
-![Equip Triage](docs/assets/banner.svg)
+Equip Triage는 **한·영 장비 메모를 읽는 BERT 계열 트랜스포머**입니다. PyTorch로 인코더와 어텐션을 직접 구현했습니다. 등록된 점검 두 건과 메모 두 줄을 입력하면 후보별로 이상 지속·해소·결과 불명을 판정합니다. 한 건만 지속되고 다른 한 건은 해소됐을 때 점검 대상을 선택합니다. 출력에서 각 판정의 점수와 근거가 된 메모 줄 번호를 확인할 수 있습니다.
 
-**검사 장비 로그에서 먼저 확인할 항목과 그 근거를 보여주는 도구**
+[메모 모델 실행](#메모-모델-실행) · [트랜스포머 구조](#트랜스포머-구조) · [Python API](docs/MEMO_MODEL.md) · [CSV 로그 검토](#csv-로그-검토) · [검증 자료](#검증-자료)
 
-검사 결과가 평소와 다르면 제품이나 공정에 문제가 있다고 판단하기 전에 장비 기록부터 확인해야 합니다. Equip Triage는 CSV 로그를 장비·LOT별로 정리하고, 중복이나 누락이 있는지, 같은 순번에 서로 다른 기록이 들어왔는지 한눈에 확인할 수 있습니다. 점검이 필요한 항목은 원본 행과 함께 표시합니다.
+## 메모 모델 실행
 
-별도 실험에서는 **이벤트 순서와 단계별 대기 시간**을 보고 이상을 구분할 수 있는지 검증합니다. 직접 구성한 트랜스포머와 단순 규칙에 같은 로그를 넣어 비교합니다.
+Python 3.11 이상과 PyTorch가 있으면 [데모 가중치](models/memo-demo.pt)로 바로 실행할 수 있습니다.
 
-[실행 방법](#실행-방법) · [모델 구조](#모델-구조) · [벤치마크](#벤치마크) · [시간 간격 어텐션](#시간-간격-어텐션) · [한영 메모 판정](#한영-메모-판정)
+```sh
+python -m equip_triage predict --model models/memo-demo.pt --input examples/memo-input.jsonl
+```
 
-![장비 로그 검토와 모델 실험의 구성. 연구용 인코더에는 이벤트 복원과 순서 분류를 위한 출력부가 있으며, 외부 모델은 성능 비교에 사용.](docs/assets/architecture-ko.svg)
+이 가중치는 **합성 기록 72건으로 학습한 실행 확인용**입니다. 벤치마크에서 평가한 가중치나 현장 배포용 모델은 아닙니다. [SHA-256](models/SHA256SUMS)
 
-## 실행 방법
+Python 3.11 이상과 PyTorch를 설치한 환경에서 저장소를 내려받아 다음 두 명령을 실행합니다.
+
+```sh
+python -m equip_triage train --data examples/memo-train.jsonl --out artifacts/memo.pt
+python -m equip_triage predict --model artifacts/memo.pt --input examples/memo-input.jsonl
+```
+
+첫 명령은 직접 만든 합성 기록 72건으로 무작위 초기값에서 모델을 학습합니다. 둘째 명령은 저장한 가중치를 불러와 오프라인으로 추론합니다. 시드 42에서 예제 다섯 건의 판정은 차례로 `data`, `data`, `hold`, `hold`, `hold`입니다. 학습에 쓴 표현을 다시 사용해 한·영 단일 원인, 두 건 모두 지속, 결과 불명, 메모 한 줄 누락을 보여 줍니다. 예제의 점수 임계값은 0.50입니다. [학습 기록](examples/memo-train.jsonl) · [입력 예제](examples/memo-input.jsonl)
+
+## 트랜스포머 구조
+
+![토큰과 임베딩 위에 인코더 두 층을 쌓은 모델 구조도. 왼쪽은 상태 레이블로 학습할 때, 오른쪽은 저장한 가중치로 추론할 때의 출력입니다.](docs/assets/memo-transformer-ko.svg)
+
+두 메모 줄은 따로 인코딩하며 같은 가중치를 씁니다. Q/K/V 투영, 패딩을 제외하는 양방향 어텐션, 두 잔차 연결, 층 정규화, GELU 피드포워드 층을 PyTorch로 직접 구현했습니다. 점검 후보마다 쿼리 하나를 만들어 등록 정보로 연결된 줄의 메모 토큰만 읽게 하고, 같은 분류기로 각 후보의 세 상태를 예측합니다. 마지막 점검 선택은 지속 건수와 점수 임계값으로 결정합니다. [편집 가능한 draw.io 원본 · 한글/영문 두 페이지](docs/assets/memo-transformer.drawio) · [모델 코드](equip_triage/model.py) · [도식 구성에 참고한 BERT 논문 그림 1](https://aclanthology.org/N19-1423.pdf#page=3)
+
+```python
+import json
+from pathlib import Path
+from equip_triage import load_checkpoint, predict
+
+model = load_checkpoint("artifacts/memo.pt")
+packet = json.loads(Path("examples/memo-input.jsonl").read_text(encoding="utf-8").splitlines()[1])
+logits, attention = model(model.encode([packet]), return_attention=True)
+print(predict(model, packet)["action"])  # data
+```
+
+[API, 텐서 차원, 체크포인트 형식, 직접 만든 데이터로 학습하는 방법](docs/MEMO_MODEL.md)
+
+## CSV 로그 검토
 
 저장소 루트에서 Python 3.11 이상으로 실행할 수 있습니다. 로그 검토 화면은 별도 패키지 설치 없이 실행됩니다.
 
@@ -29,7 +59,13 @@ python app.py --json
 - **CSV 형식:** `equipment,lot,sequence,time,code,memo`. 장비·LOT별 순번은 1부터 시작하며, 시각은 UTC 오프셋 또는 `Z`를 포함해야 합니다.
 - **동작 범위:** Python과 SQLite를 이용한 오프라인 로그 검토. 화면의 점검 표시는 CSV 기록과 규칙을 기준으로 합니다. 실시간 수집·장비 제어·모델 추론은 기능 범위 밖입니다.
 
-## 모델 구조
+## 검증 자료
+
+아래에는 기존 모델과 토크나이저, 평가 조건으로 얻은 결과를 보존했습니다. 이전 한·영 메모 시험에서 후보별 쿼리 BERT가 맞힌 짝은 세 시드 모두 영어·한국어 각 0/112쌍이었습니다. 위 패키지의 예제는 익숙한 표현으로 학습·저장·복원 경로를 확인합니다. [동결된 메모 평가 보고서](research/candidate-states/REPORT.md)
+
+### 이벤트 모델
+
+![CSV 로그 검토와 기존 이벤트 시퀀스 모델의 구성입니다.](docs/assets/architecture-ko.svg)
 
 | 구성 | 역할 |
 | --- | --- |
@@ -40,11 +76,11 @@ python app.py --json
 
 위 이벤트 순서 실험의 인코더는 랜덤 초기값에서 학습합니다. 입력은 자연어 문장 대신 장비 이벤트 ID입니다. 양방향 인코더는 이미 끝난 로그를 다시 보는 용도이며, 별도 인과형 모델은 앞선 기록으로 다음 이벤트를 예측하는 비교 모델입니다.
 
-## 한영 메모 판정
+### 한영 메모 판정
 
 두 점검 중 하나만 계속 불량이고 다른 하나는 재검에서 정상이면 점검할 대상을 하나로 좁힐 수 있습니다. 둘 다 불량이면 판정을 보류합니다. 이 오프라인 실험은 등록된 점검 두 건과 한국어 또는 영어 메모 두 줄을 받아, 후보마다 **이상 지속·해소·결과 불명**을 구분합니다.
 
-![합성 기록의 정답 상태로 본 후보별 어텐션 구조. 등록된 점검과 메모 줄을 연결하고 각 후보의 상태를 읽은 뒤, 한 후보만 지속이고 다른 후보는 해소일 때 점검으로 연결합니다.](docs/assets/candidate-states-ko.svg)
+[이전 실험의 예시 도식](docs/assets/candidate-states-ko.svg)
 
 그림은 직접 구현한 BERT 계열 모델의 동작을 **합성 예시의 정답 상태**로 설명합니다. 인코더는 두 줄을 따로 읽습니다. 각 후보의 쿼리는 등록 정보로 연결된 줄의 토큰만 읽고, 공유 분류기가 상태를 판정합니다. 같은 토큰을 균등하게 읽는 모델과도 비교했습니다. 대상에 따라 근거를 읽는 어텐션과 레이블 쿼리에는 선행 연구가 있습니다. [Wang 외, 2016](https://aclanthology.org/D16-1058/) · [Liu 외, 2021](https://arxiv.org/abs/2107.10834)
 
@@ -56,7 +92,7 @@ python app.py --json
 
 한 건만 지속되는 메모를 올바른 점검에 연결하고, 두 건이 지속되는 짝 메모를 보류해야 한 쌍을 맞힌 것으로 셉니다. 학습·검증에 없던 합성 표현 가족 8개로 평가했습니다. 검증에서 선택한 기본값은 문자 모델입니다. 보류 정답 624건 중 영어 16건, 한국어 0건을 점검으로 잘못 넘겼습니다. 새 시험에서 가장 정확한 방식은 규칙이었고, BERT는 세 시드 모두 검증 임계값에서 전부 보류했습니다. 문자 모델에서는 후보별 상태를 읽고 지속 건수를 세는 방식의 이득이 확인됐습니다. 학습형 어텐션의 이득은 확인되지 않았습니다. [한영 CLI 실행](research/candidate-states/README.md) · [대조 실험·불확실성·점검 커버리지](research/candidate-states/REPORT.md)
 
-## 벤치마크
+### 벤치마크
 
 ![외부 모델 비교: 오류 유형별 탐지 건수, 오경보, CPU 처리량. 주요 단계만 남기면 자체 인코더·BERT-Mini·선후관계 규칙 모두 192/192건 탐지, 오경보 0건.](docs/assets/external-benchmark.png)
 
@@ -71,7 +107,7 @@ python app.py --json
 
 **결과 해석:** 합성 실험에서는 주요 단계만 골라 비교했을 때 모델의 탐지율이 올라갔습니다. 같은 실험에서 선후관계 규칙은 정확도가 같고 처리 속도가 더 빨랐습니다. 실제 설비의 탐지율과 수율 개선 효과는 별도 검증이 필요합니다.
 
-## 시간 간격 어텐션
+### 시간 간격 어텐션
 
 읽기 전 10틱을 기다리는 상황을 가정했습니다. 긴 대기가 원래 필요한 단계라면 정상으로, 빠르게 끝나야 하는 단계라면 이상으로 봅니다. 이 차이를 잡기 위해 **시간 정보를 이벤트 입력에 넣는 방식**과 **입력에 더해 어텐션 점수에도 반영하는 방식**을 비교했습니다.
 
