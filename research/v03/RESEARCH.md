@@ -36,7 +36,6 @@ Python 3.12 recommended. From the repository root:
 ```sh
 python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu
 python research/v03/scale_pilot.py --seed 42 --epochs 3 --out results-local.json --export-jsonl sessions-local.jsonl
-python -m unittest discover -s research/v03 -p test_scale.py -v
 ```
 
 The optional generated JSONL is not committed. Run the [standalone notebook on Colab](https://colab.research.google.com/github/ArialHanho/equip-triage/blob/c08386f3c4d0c7425a5dd8e7e60b259aa575628e/notebooks/equip-triage-v03-30k.ipynb). Additional seeds, independently designed families, and authorized domain data remain open checks.

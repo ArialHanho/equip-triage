@@ -12,7 +12,6 @@ From the repository root (Python 3.12 recommended):
 python -m pip install -r research/requirements-events.txt
 python research/event_transformer.py --seed 42 --epochs 120 --out events-local.json
 python research/long_context.py --seed 42 --out context-local.json
-python -m unittest discover -s research -p test_events.py -v
 ```
 
 [Self-contained original pilot notebook](../notebooks/equip-triage-scratch.ipynb). The separate [30K benchmark](v03/RESEARCH.md) scales this causal research, not the original memo task.
@@ -24,7 +23,6 @@ python -m unittest discover -s research -p test_events.py -v
 ```sh
 python -m pip install -r research/requirements.txt
 python research/study.py --out memo-local.json
-python -m unittest discover -s research -p test_study.py -v
 ```
 
 Neither research experiment is integrated with the replay app.

@@ -4,10 +4,10 @@ The inspection replay app and sequence research solve different problems. Follow
 
 | Component | Implemented in this repository | Verification |
 | --- | --- | --- |
-| Log replay | [app.py](../app.py) preserves raw rows, normalizes UTC, reconstructs equipment/lot streams, detects gaps/conflicts and exposes a local read-only view. | [Replay tests](../tests) include real HTTP requests. |
-| Encoder backbone | [bert_mlm.py](../research/public-logbert/bert_mlm.py) builds input embeddings, two residual blocks, Q/K/V projections, head splitting and merging, padding-key masks, scaled attention, FFN, layer normalization and event logits. | [Encoder tests](../research/public-logbert/test_mlm.py) cover right context, padding, corruption and masked loss. |
+| Log replay | [app.py](../app.py) preserves raw rows, normalizes UTC, reconstructs equipment/lot streams, detects gaps/conflicts and exposes a local read-only view. | Run the local replay and query `/report.json` to inspect reconstructed evidence. |
+| Encoder backbone | [bert_mlm.py](../research/public-logbert/bert_mlm.py) builds input embeddings, two residual blocks, Q/K/V projections, head splitting and merging, padding-key masks, scaled attention, FFN, layer normalization and event logits. | The public masked-event diagnostic shows when right context changes the prediction. |
 | Training and scoring | Random initialization. Given event IDs, sample supervised positions, corrupt inputs, compute cross-entropy there, and optimize with AdamW. At evaluation, hide each event separately, then average the negative log-probability of the observed events. | [Controlled masked-event probe](../research/public-logbert/SYNTHETIC_MLM.md) isolates the effect of a later cue. |
-| Public benchmark | [hdfs_benchmark.py](../research/public-logbert/hdfs_benchmark.py) checks the pinned archive, joins the supplied trace/label tables, isolates visible signatures across splits, fits normal-only models, and calibrates alert thresholds on validation normals. | [Dataset and metric tests](../research/public-logbert/test_hdfs.py) and [comparison control tests](../research/public-logbert/test_controls.py). |
+| Public benchmark | [hdfs_benchmark.py](../research/public-logbert/hdfs_benchmark.py) checks the pinned archive, joins the supplied trace/label tables, isolates visible signatures across splits, fits normal-only models, and calibrates alert thresholds on validation normals. | The runner emits the split audit, thresholds, scores and comparison results. |
 
 ## Tensor flow
 

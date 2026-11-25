@@ -61,7 +61,6 @@ From the repository root with Python 3.12 and PyTorch 2.9.1 CPU:
 
 ```sh
 python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu
-python -B -m unittest discover -s research/public-logbert -v
 python -B research/public-logbert/hdfs_benchmark.py --download --seed 42 --epochs 5 --train-blocks 24000 --eval-blocks 3000 --out hdfs-42-local.json
 python -B research/public-logbert/hdfs_benchmark.py --seed 7 --epochs 5 --train-blocks 24000 --eval-blocks 3000 --out hdfs-7-local.json
 ```

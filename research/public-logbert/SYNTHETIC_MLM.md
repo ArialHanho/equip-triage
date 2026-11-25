@@ -7,7 +7,6 @@ After 16 epochs the encoder recovered all 128 hidden middle events in a held-out
 Run from `research/public-logbert` with Python 3.12 and PyTorch installed. The recorded run used PyTorch 2.9.1+cpu on a single CPU thread. Each invocation initializes new parameters and generates its inputs in memory.
 
 ```sh
-python -B -m unittest -v test_mlm
 python -B synthetic_check.py --seed 42
 ```
 

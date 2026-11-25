@@ -29,7 +29,6 @@ Open [localhost:8765](http://127.0.0.1:8765/). Stop with Ctrl+C. The bundled CSV
 ```sh
 python app.py --json
 python app.py --input examples/events.csv --serve --port 8766
-python -m unittest discover -s tests -v
 ```
 
 The CSV header is `equipment,lot,sequence,time,code,memo`. Use UTF-8, an offset-aware timestamp (or `Z`), and sequence numbers starting at 1 for each equipment/lot pair. The app replays a file into an in-memory database; it is not a live collector, permanent historian, or equipment controller.
