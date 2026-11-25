@@ -8,7 +8,7 @@
 
 Replay an equipment CSV by machine and lot. Flag duplicate, late, missing, and conflicting records. Show the original rows behind a review or hold so an operator can inspect the equipment record before drawing a process conclusion.
 
-[Quickstart](#quickstart) · [Model architecture](#model-architecture) · [Benchmarks](#benchmarks) · [Research roadmap](#research-roadmap)
+[Quickstart](#quickstart) · [Model architecture](#model-architecture) · [Benchmarks](#benchmarks) · [Time-gap attention](#time-gap-attention)
 
 ![Two separate paths: equipment CSV to evidence review; event IDs to a two-block encoder with masked-event and order heads. External models run only as comparisons.](docs/assets/architecture-en.svg)
 
@@ -51,11 +51,38 @@ The order head targets **illegal order with unchanged event counts**. The bidire
 
 **Finding:** The choice of event representation can matter more than the model. Neither the order head nor the milestone filter shows an advantage over a simple rule on the tested grammar. No industrial detection or yield claim follows from these experiments.
 
-## Research roadmap
+## Time-gap attention
 
-1. **Hold out entire normal recipes.** Exclude at least one legal recipe family from training and threshold calibration. Pair legal and invalid traces with the same counts, and include a case where `ACK` is optional in one recipe but required in another. Freeze the threshold on validation normals; report recall, false alerts by recipe, and CPU scoring cost. Compare count, trigram, learned precedence, and the same-size encoder on the same splits.
-2. **Isolate the architecture change.** Relative position in attention is [prior work](https://arxiv.org/abs/1803.02155); the question here is whether event timing helps equipment triage. Compare standard QKV with a small relative event-distance/time-gap bias, keeping training data and budget fixed. Compare against an input-only time-gap version and recipe-conditioned precedence. An architectural contribution requires measurable improvement on unseen legal recipes at a comparable false-alert rate. Treat this as a proposal, not an implemented model.
-3. **Add industrial evidence separately.** Evaluate an offline sensor replay candidate from the [PHM Society 2018 ion-mill challenge](https://phmsociety.org/conference/annual-conference-of-the-phm-society/annual-conference-of-the-prognostics-and-health-management-society-2018-b/phm-data-challenge-6/) once access and reuse terms are verified. Compare a maintenance window with same-tool, same-recipe reference windows. Its labels mark maintenance shutdowns, not the onset of faults or illegal recipe order. Keep sensor-replay results separate from the order benchmark.
+A long wait is legal at one stage and anomalous at another. Can an encoder tell them apart on an unseen procedure when it receives the same events, recipe profile and timestamps? The offline experiment compares two places to use the clock. One adds the preceding gap and elapsed time to each event embedding. The other keeps those inputs and also adds a learned, per-head bias for the signed time difference between events to each QK score before softmax.
+
+```mermaid
+flowchart TD
+    E["Event IDs, recipe profile and positions"] --> X["Event embeddings"]
+    T["Timestamps"] --> I["Gap since previous event and time since START"]
+    I --> X
+    X --> Q["Q, K and V projections"]
+    Q --> S["Scaled QK scores"]
+    T -. "Added in the time-bias arm" .-> B["Per-head bias for bucketed time differences"]
+    B --> S
+    S --> A["Mask, softmax and weighted values"]
+    A --> O["Two encoder blocks in total, then START fault score"]
+```
+
+Each synthetic pair has the same event counts, gap multiset and total duration. For a timing fault, two stage-to-read intervals exchange places and the event sequence stays identical. For an order fault, a required `ACK` moves after `CLOSE` and **every timestamp** stays identical. Four-stage orderings define 24 procedure families. Training uses 16 families, threshold calibration uses four different families, and testing uses the remaining four. Each model raises an alert above its own 99th percentile on 256 validation normals.
+
+| Method | Timing faults detected / 128 | Order faults detected / 128 | False alerts / 256 normals |
+| --- | ---: | ---: | ---: |
+| Recipe- and stage-conditioned rule | 128 | 128 | 0 |
+| Encoder without timestamps | 0 / 0 / 0 | 123 / 128 / 128 | 0 / 0 / 0 |
+| Time at the input | 1 / 5 / 4 | 128 / 128 / 123 | 1 / 11 / 10 |
+| Time in QK only | 0 / 1 / 3 | 128 / 128 / 128 | 0 / 3 / 6 |
+| Time at the input and in QK | 0 / 3 / 1 | 127 / 128 / 121 | 0 / 5 / 2 |
+
+Entries separated by slashes give seeds 41, 42 and 43 in order. Adding the QK time bias to the timed input reduces false alerts at every seed and detects fewer timing faults at every seed. At seed 42, it scores the fault higher than its matched normal in just **57/128** timing pairs, compared with **56/128** for input alone. The stage rule learns the allowed read intervals and event patterns from training normals. Its perfect result reflects the generator’s fixed stage grammar. All measurements here use invented equipment procedures.
+
+Relative position in attention and time-aware log detection both have prior examples. This study tests where to supply timestamps under a paired procedure holdout. [Shaw et al. (2018)](https://aclanthology.org/N18-2074/) · [Gong et al., LogETA (2024)](https://doi.org/10.1016/j.future.2024.03.028)
+
+[Run the experiment and inspect the controls](research/time-attention/README.md) · [Per-family counts, thresholds and CPU timings](research/time-attention/results.json)
 
 [Implementation notes](docs/IMPLEMENTATION.md) · [Contribution guide](CONTRIBUTIONS.md) · [License](LICENSE)
 
