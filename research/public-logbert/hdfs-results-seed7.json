@@ -1,0 +1,284 @@
+{
+  "scope": "limited HDFS_v1 public IT-log subset; offline bidirectional MLM, not industrial validation",
+  "model": "randomly initialized two-block BERT-style event encoder; MLM only, not full original LogBERT",
+  "source_archive": {
+    "url": "https://zenodo.org/records/8196385/files/HDFS_v1.zip?download=1",
+    "bytes": 186645559,
+    "md5": "76a24b4d9a6164d543fb275f89773260",
+    "sha256": "04f919f2185821f23f045dca611a7586429bdabc601bd7b43f30005f8e289b01",
+    "trace_member": "preprocessed/Event_traces.csv",
+    "label_member": "preprocessed/anomaly_label.csv"
+  },
+  "audit": {
+    "source": {
+      "blocks": 575061,
+      "events": 11175629,
+      "normal": 558223,
+      "anomaly": 16838
+    },
+    "source_prefix_duplicates_extra": 556689,
+    "source_partition_label_counts": {
+      "train": {
+        "normal": 496162,
+        "anomaly": 10072
+      },
+      "validation": {
+        "normal": 34948,
+        "anomaly": 3764
+      },
+      "test": {
+        "normal": 27113,
+        "anomaly": 3002
+      }
+    },
+    "source_blocks_truncated_at_max_len": 44,
+    "max_len": 64,
+    "split_rule": "seeded SHA256 of first max_len event IDs; 70/15/15 hash buckets",
+    "subset_rule": "lowest seeded block-ID hashes per partition; normal-only train",
+    "encoded_cross_split_collision_exclusions": {
+      "train": 0,
+      "validation": 0,
+      "test": 0
+    },
+    "train_event_vocabulary_size": 15,
+    "selected": {
+      "train": {
+        "blocks": 24000,
+        "anomaly": 0,
+        "normal": 24000,
+        "original_events": 459930,
+        "visible_events": 459725,
+        "truncated_blocks": 1,
+        "unique_visible_sequences": 1750,
+        "unknown_events": 0
+      },
+      "validation": {
+        "blocks": 3000,
+        "anomaly": 271,
+        "normal": 2729,
+        "original_events": 64231,
+        "visible_events": 64026,
+        "truncated_blocks": 1,
+        "unique_visible_sequences": 566,
+        "unknown_events": 54
+      },
+      "test": {
+        "blocks": 3000,
+        "anomaly": 310,
+        "normal": 2690,
+        "original_events": 65083,
+        "visible_events": 64878,
+        "truncated_blocks": 1,
+        "unique_visible_sequences": 647,
+        "unknown_events": 88
+      }
+    }
+  },
+  "seed": 7,
+  "epochs": 5,
+  "torch": "2.9.1+cpu",
+  "device": "cpu",
+  "threads": 1,
+  "parameters": 28690,
+  "baseline_protocol": {
+    "causal_transformer": "same architecture and size with causal mask, separate random-init next-event training and mean next-event NLL",
+    "bag_l1": "nearest normal L1 event-count vector; includes unknown count and implicitly length",
+    "mlm_inference_shuffled": "same ordered-trained model, permuted validation and test inputs, distinct validation-only threshold"
+  },
+  "training": [
+    {
+      "mean_loss": 0.6796445076236219,
+      "selected_tokens": 68344
+    },
+    {
+      "mean_loss": 0.1886792571158859,
+      "selected_tokens": 68610
+    },
+    {
+      "mean_loss": 0.1440567068438562,
+      "selected_tokens": 68663
+    },
+    {
+      "mean_loss": 0.12536326301704795,
+      "selected_tokens": 69084
+    },
+    {
+      "mean_loss": 0.11022562676736261,
+      "selected_tokens": 69260
+    }
+  ],
+  "causal_training": [
+    {
+      "mean_loss": 0.5081413504324598,
+      "selected_tokens": 459725
+    },
+    {
+      "mean_loss": 0.24553223484945477,
+      "selected_tokens": 459725
+    },
+    {
+      "mean_loss": 0.23066433514368348,
+      "selected_tokens": 459725
+    },
+    {
+      "mean_loss": 0.22387556060724842,
+      "selected_tokens": 459725
+    },
+    {
+      "mean_loss": 0.22011322724416613,
+      "selected_tokens": 459725
+    }
+  ],
+  "score": "mean leave-one-out masked event NLL; completed first-max_len-event prefixes",
+  "results": {
+    "mlm": {
+      "threshold": 1.0858113765716553,
+      "threshold_rule": "validation normal 99th percentile; strict score>threshold",
+      "validation": {
+        "average_precision": 0.38025579894109873,
+        "tp": 48,
+        "fp": 27,
+        "tn": 2702,
+        "fn": 223,
+        "precision": 0.64,
+        "recall": 0.17712177121771217,
+        "fpr": 0.009893733968486624
+      },
+      "test": {
+        "average_precision": 0.5047079734113498,
+        "tp": 73,
+        "fp": 32,
+        "tn": 2658,
+        "fn": 237,
+        "precision": 0.6952380952380952,
+        "recall": 0.23548387096774193,
+        "fpr": 0.011895910780669145
+      }
+    },
+    "unigram": {
+      "threshold": 2.883976780371462,
+      "threshold_rule": "validation normal 99th percentile; strict score>threshold",
+      "validation": {
+        "average_precision": 0.32235861004856387,
+        "tp": 47,
+        "fp": 26,
+        "tn": 2703,
+        "fn": 224,
+        "precision": 0.6438356164383562,
+        "recall": 0.17343173431734318,
+        "fpr": 0.009527299377061194
+      },
+      "test": {
+        "average_precision": 0.39003592890330596,
+        "tp": 71,
+        "fp": 48,
+        "tn": 2642,
+        "fn": 239,
+        "precision": 0.5966386554621849,
+        "recall": 0.22903225806451613,
+        "fpr": 0.017843866171003718
+      }
+    },
+    "trigram": {
+      "threshold": 1.4316308646742184,
+      "threshold_rule": "validation normal 99th percentile; strict score>threshold",
+      "validation": {
+        "average_precision": 0.2758135101772777,
+        "tp": 45,
+        "fp": 27,
+        "tn": 2702,
+        "fn": 226,
+        "precision": 0.625,
+        "recall": 0.16605166051660517,
+        "fpr": 0.009893733968486624
+      },
+      "test": {
+        "average_precision": 0.3363618438447211,
+        "tp": 57,
+        "fp": 34,
+        "tn": 2656,
+        "fn": 253,
+        "precision": 0.6263736263736264,
+        "recall": 0.18387096774193548,
+        "fpr": 0.012639405204460967
+      }
+    },
+    "bag_l1": {
+      "threshold": 0.0,
+      "threshold_rule": "validation normal 99th percentile; strict score>threshold",
+      "validation": {
+        "average_precision": 0.9806493991491367,
+        "tp": 266,
+        "fp": 2,
+        "tn": 2727,
+        "fn": 5,
+        "precision": 0.9925373134328358,
+        "recall": 0.981549815498155,
+        "fpr": 0.0007328691828508611
+      },
+      "test": {
+        "average_precision": 0.975691471961851,
+        "tp": 310,
+        "fp": 15,
+        "tn": 2675,
+        "fn": 0,
+        "precision": 0.9538461538461539,
+        "recall": 1.0,
+        "fpr": 0.0055762081784386614
+      }
+    },
+    "mlm_inference_shuffled": {
+      "threshold": 8.10900592803955,
+      "threshold_rule": "validation normal 99th percentile; strict score>threshold",
+      "validation": {
+        "average_precision": 0.06149937245779372,
+        "tp": 0,
+        "fp": 27,
+        "tn": 2702,
+        "fn": 271,
+        "precision": 0.0,
+        "recall": 0.0,
+        "fpr": 0.009893733968486624
+      },
+      "test": {
+        "average_precision": 0.07078618069184978,
+        "tp": 0,
+        "fp": 13,
+        "tn": 2677,
+        "fn": 310,
+        "precision": 0.0,
+        "recall": 0.0,
+        "fpr": 0.0048327137546468404
+      }
+    },
+    "causal_transformer": {
+      "threshold": 0.9124005436897278,
+      "threshold_rule": "validation normal 99th percentile; strict score>threshold",
+      "validation": {
+        "average_precision": 0.7700594185711646,
+        "tp": 66,
+        "fp": 27,
+        "tn": 2702,
+        "fn": 205,
+        "precision": 0.7096774193548387,
+        "recall": 0.24354243542435425,
+        "fpr": 0.009893733968486624
+      },
+      "test": {
+        "average_precision": 0.7682075136508782,
+        "tp": 90,
+        "fp": 32,
+        "tn": 2658,
+        "fn": 220,
+        "precision": 0.7377049180327869,
+        "recall": 0.2903225806451613,
+        "fpr": 0.011895910780669145
+      }
+    }
+  },
+  "elapsed_seconds": 96.99875653800018,
+  "test_count_vector_match_to_normal_train": {
+    "normal_exact_match": 2675,
+    "anomaly_exact_match": 0
+  }
+}

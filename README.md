@@ -12,7 +12,7 @@ Replay inspection logs without losing the original evidence. Then test whether *
 | --- | --- | --- |
 | **Log replay** | Parse CSV, preserve source rows, canonicalize timestamps to UTC, isolate equipment/lot streams, and flag duplicates, gaps, or conflicts. | Runnable local app using Python and SQLite. |
 | **Sequence baselines** | Learn normal event order with a trigram and a hand-built causal Transformer. Compare both with an explicit state machine and shared timing/sequence rules. | Evaluated on 30,000 synthetic sessions. |
-| **BERT-style encoder** | Implement token and position embeddings, multi-head Q/K/V attention, feed-forward layers, residuals, normalization, and a masked-event head. Train from random initialization. | [Backbone and masked-event diagnostic](research/public-logbert/SYNTHETIC_MLM.md) implemented and tested. Public-data evaluation is separate. |
+| **BERT-style encoder** | Implement token and position embeddings, multi-head Q/K/V attention, feed-forward layers, residuals, normalization, and a masked-event head. Train from random initialization. | [Backbone and masked-event diagnostic](research/public-logbert/SYNTHETIC_MLM.md) implemented and tested. Evaluated on public HDFS traces; see the comparison below. |
 
 The causal model predicts the **next event from its prefix**. The BERT-style objective reconstructs a **masked event using both sides** of a completed sequence. The latter is for retrospective triage, not live alarms or online early detection. Event IDs are the tokens; this is not a Korean language model. Neither research model is wired to the replay app. No pretrained checkpoints are required.
 
@@ -34,6 +34,24 @@ python -m unittest discover -s tests -v
 
 The CSV header is `equipment,lot,sequence,time,code,memo`. Use UTF-8, an offset-aware timestamp (or `Z`), and sequence numbers starting at 1 for each equipment/lot pair. The app replays a file into an in-memory database; it is not a live collector, permanent historian, or equipment controller.
 
+## Measured: 30,000 public HDFS blocks
+
+The same split and validation-only threshold rule were used for every method. The train/validation/test caps were 24,000 / 3,000 / 3,000. The table below is seed 42.
+
+| Method | Test AP ↑ | Caught ↑ | False alarms ↓ |
+| --- | ---: | ---: | ---: |
+| Nearest normal event counts | 0.9247 | 62/62 | 3/2,938 |
+| Bidirectional masked encoder | 0.6517 | 60/62 | 53/2,938 |
+| Causal Transformer (same size) | 0.5726 | 41/62 | 43/2,938 |
+| Trigram | 0.3485 | 32/62 | 54/2,938 |
+| Unigram | 0.3480 | 35/62 | 53/2,938 |
+
+**Nearest normal event counts had the highest AP in the main run.** The masked encoder reached AP 0.6517 versus 0.9247 for the counter of event IDs. Event counts also won the second split (AP 0.9757). The masked encoder beat the same-size causal model in the main run but lost in the second (AP 0.5047 vs. 0.7682). None of the test anomalies in either split shared an exact count vector with a normal training block.
+
+[Full metrics, order-shuffle control, second split and commands](research/public-logbert/RESEARCH.md) · [What was implemented and how it was tested](docs/IMPLEMENTATION.md)
+
+This is Hadoop IT telemetry supplied as preprocessed event traces, not a semiconductor field evaluation. [Data provenance](docs/EVALUATION.md) also explains why SECOM is a separate tabular task.
+
 ## Measured: 30,000 synthetic equipment sessions
 
 24,000 normal train sessions, 3,000 validation, 3,000 test; 766,290 event rows total. The test set has 150 injected anomalies and 2,850 normal sessions. Fix each threshold on validation normals (target false-alarm rate ≤1%), then apply it unchanged to test.
@@ -53,10 +71,6 @@ These are the [committed Linux CPU results](research/v03/results-30k.json). The 
 A two-block, 26,867-parameter BERT-style encoder recovered 128/128 masked targets on held-out synthetic sequences when it could see the later cue, versus 32/128 when the cue was masked too. The cue is sufficient by design, so a lookup table could also solve this probe. This checks a property of the implementation, not anomaly-detection performance.
 
 [Encoder code](research/public-logbert/bert_mlm.py) · [Method and reproduction](research/public-logbert/SYNTHETIC_MLM.md) · [Results](research/public-logbert/synthetic-results.json)
-
-## Public data: what it can establish
-
-[LogHub HDFS v1](https://github.com/logpai/loghub/tree/master/HDFS) contains labeled Hadoop block traces. It can test event-sequence methods on real system logs, not on semiconductor equipment. [UCI SECOM](https://archive.ics.uci.edu/dataset/179/secom) contains manufacturing measurements and pass/fail labels, not equipment event sequences or operator notes. Treat it as a separate tabular task. See [research sources and evaluation criteria](docs/EVALUATION.md).
 
 ## Repository map
 

@@ -7,6 +7,8 @@
 | [LogHub HDFS v1](https://github.com/logpai/loghub/tree/master/HDFS), [archive and terms](https://zenodo.org/records/8196385) | Block-level anomaly scoring on Hadoop traces. Supplied traces can test sequence modeling without pretending to parse raw logs. | Semiconductor-field accuracy, operator memo routing, early warning, or conclusions about production yield. |
 | [UCI SECOM](https://archive.ics.uci.edu/dataset/179/secom), [raw archive](https://archive.ics.uci.edu/static/public/179/secom.zip) | An independent tabular pass/fail experiment on semiconductor measurements. The downloaded matrix contains 1,567 × 590 measurements; labels are separate (104 failures). | Event modeling, repair timelines, or a join to HDFS. The raw width differs from the catalog's 591-feature field. |
 
+[Executed protocol, metrics, and reproducer](../research/public-logbert/RESEARCH.md).
+
 ## Acceptance criteria
 
 1. Pin the data source and record checksums, terms, preprocessing, sample counts, and exclusions. Do not commit the upstream archive.

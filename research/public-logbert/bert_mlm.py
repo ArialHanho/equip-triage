@@ -30,13 +30,16 @@ class EncoderBlock(nn.Module):
         )
         self.output_norm = nn.LayerNorm(width)
 
-    def forward(self, states, valid):
+    def forward(self, states, valid, causal=False):
         batch, length, width = states.shape
         qkv = self.qkv(states).reshape(batch, length, 3, self.heads, self.head_width)
         query, key, value = qkv.permute(2, 0, 3, 1, 4).unbind(0)
         scores = query @ key.transpose(-2, -1) / math.sqrt(self.head_width)
         # Every real query can attend to real keys on both sides.
         scores = scores.masked_fill(~valid[:, None, None, :], float("-inf"))
+        if causal:
+            future = torch.ones((length, length), dtype=torch.bool, device=states.device).triu(diagonal=1)
+            scores = scores.masked_fill(future, float("-inf"))
         weights = scores.softmax(dim=-1)
         attended = (weights @ value).transpose(1, 2).reshape(batch, length, width)
         states = self.attention_norm(states + self.merge(attended))
@@ -56,7 +59,7 @@ class EventMLM(nn.Module):
         self.blocks = nn.ModuleList(EncoderBlock(width, heads) for _ in range(layers))
         self.readout = nn.Linear(width, vocab_size)
 
-    def forward(self, ids):
+    def forward(self, ids, *, causal=False):
         if ids.ndim != 2 or ids.shape[1] > self.max_len:
             raise ValueError("Expected [batch, length] within the configured length limit.")
         valid = ids.ne(PAD)
@@ -65,7 +68,7 @@ class EventMLM(nn.Module):
         positions = torch.arange(ids.shape[1], device=ids.device)
         states = self.input_norm(self.tokens(ids) + self.positions(positions))
         for block in self.blocks:
-            states = block(states, valid)
+            states = block(states, valid, causal=causal)
         return self.readout(states)
 
 
