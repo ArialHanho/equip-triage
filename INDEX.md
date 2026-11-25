@@ -1,15 +1,9 @@
 # Project index
 
-**Goal:** Build a transparent inspection-log replay tool and evaluate hand-implemented sequence models against simple baselines.
+**Goal:** Review equipment events and operator notes for first-check triage.
 
-**Current evidence:** Read-only CSV replay is runnable. The causal model and three comparison methods have synthetic results in [v0.3](research/v03/RESEARCH.md); these do not validate a real factory. The separate [masked encoder probe](research/public-logbert/SYNTHETIC_MLM.md) confirms right-context use on a designed synthetic task only.
+**Current state:** The CSV viewer shows event sequences and memo text together and applies rules. The standalone PyTorch model reads two registered checks and two memo lines. It does not consume the CSV event sequence.
 
-**Public evidence:** See [30K HDFS results](research/public-logbert/RESEARCH.md) for controls, two split seeds, thresholds and failure cases. See the [implementation map](docs/IMPLEMENTATION.md) for the exact code and test boundaries.
+[Run the viewer and model](README.md) · [한국어](README.ko.md) · [Python API and input schema](docs/MEMO_MODEL.md) · [Frozen evaluation evidence](docs/EVALUATION.md)
 
-**Order-aware upgrade:** [Matched synthetic reversal benchmark](research/order-aware/README.md): the new head beats the original MLM at the fixed threshold; learned precedence wins the benchmark overall. [Why it exists](docs/WHY_ORDER.md).
-
-**External comparison:** [Matched Google BERT and local LLM runs](research/external-comparison/README.md). Train-only event projection repaired most missed order faults on generated traces, but learned precedence rules match the best result in this controlled grammar.
-
-**Next question:** How does the order head handle legal alternative paths and reversal patterns excluded from training? Then validate on authorized equipment logs with machine/time splits and operator-reviewed alerts.
-
-**Start here:** [README](README.md) · [Baseline research](research/RESEARCH.md) · [Contribution guide](CONTRIBUTIONS.md) · [Release checklist](RELEASE_CHECKLIST.md).
+**Open question:** Validate whether event-derived candidates and independently reviewed notes can improve first-check selection, including how disagreements should be held rather than forced into a route.

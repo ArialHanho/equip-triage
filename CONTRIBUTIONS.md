@@ -1,13 +1,5 @@
-# Contribution guide
+# Contributing
 
-Keep changes reproducible and document the evaluation conditions. The encoder uses PyTorch tensor operations, layers, autograd, and the optimizer. It does not claim a new Transformer architecture.
+Keep changes reproducible and include the expected input, output and failure cases. Use small commits for encoder, masking, token binding and decision-policy changes. Report synthetic and real-data results separately. Do not commit private equipment logs, process recipes, employer code or credentials.
 
-Useful follow-up contributions:
-
-1. Reimplement and explain the Q/K/V projections, head reshaping, and attention masks; add shape and invariance tests.
-2. Check causal masking by perturbing future tokens. Check bidirectional masking by making a masked target depend on information to its right.
-3. Verify the shifted loss and the masked-token loss on a small example with padding.
-4. Add an independently designed event family and freeze the split and operating point before examining results.
-5. Compare longer n-grams, count-based baselines and order ablations across multiple seeds. Record failures as well as gains.
-
-Use reviewable commits and record exactly what you implemented or validated. Do not include private equipment logs, recipes, or employer code.
+[Project scope](INDEX.md) · [API and data format](docs/MEMO_MODEL.md) · [Evaluation archive](docs/EVALUATION.md)
