@@ -4,7 +4,7 @@ Which detectors recognize an invalid order when the equipment supports two valid
 
 ## Results
 
-![Detections by fault type, false alerts and batch CPU throughput](../../docs/assets/external-benchmark.svg)
+![Detections by fault type, false alerts and batch CPU throughput](../../docs/assets/external-benchmark.png)
 
 Regenerate the figure from the checked-in aggregate CSV with `python -m pip install matplotlib==3.10.8` and `python plot.py` from this folder. Use `--output figure.png` for a raster export.
 

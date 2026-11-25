@@ -6,6 +6,16 @@
 
 Replay inspection logs without losing the original evidence. Then test whether **an encoder built from scratch** can recognize unusual event context that simpler methods miss.
 
+## External comparison: custom encoder, Google BERT and a local LLM
+
+![Synthetic detection by fault slice, false alerts and CPU throughput: the projected custom encoder, projected BERT-Mini and precedence rule tied at 192/192 with zero false alerts](docs/assets/external-benchmark.png)
+
+On raw traces, pretrained BERT-Mini caught **81/192** order faults versus **3/192** for the custom order head (seed 42), but it caught **0/96** of the held-out fault type. We changed the input, not the backbone size: a filter fitted only on normal training logs retained stable milestones and discarded intermittent telemetry. Both the custom head **and** BERT-Mini then caught **192/192 with zero false alerts**. The simpler learned precedence rule matched their accuracy and was faster.
+
+The projected inputs contain only two allowed normal workflows, both seen during training. This is evidence for the representation change on a controlled synthetic study, not for superiority over BERT or LLMs generally. The SmolLM2 run is a frozen four-shot comparison, not a fine-tuned baseline. Neither this comparison nor the upgrade was run on production logs.
+
+[Vector figure (SVG)](docs/assets/external-benchmark.svg) · [Results, protocol and reproduction](research/external-comparison/README.md) · [Chart data](research/external-comparison/metrics.csv) · [Checkpoint provenance](research/external-comparison/sources.json)
+
 ## What belongs in software, and what belongs in a model?
 
 | Layer | Responsibility | Status |
@@ -32,16 +42,6 @@ python app.py --input examples/events.csv --serve --port 8766
 ```
 
 The CSV header is `equipment,lot,sequence,time,code,memo`. Use UTF-8, an offset-aware timestamp (or `Z`), and sequence numbers starting at 1 for each equipment/lot pair. The app replays a file into an in-memory database; it is not a live collector, permanent historian, or equipment controller.
-
-## External comparison: custom encoder, Google BERT and a local LLM
-
-![Synthetic detection by fault slice, false alerts and CPU throughput: the projected custom encoder, projected BERT-Mini and precedence rule tied at 192/192 with zero false alerts](docs/assets/external-benchmark.svg)
-
-On raw traces, pretrained BERT-Mini caught **81/192** order faults versus **3/192** for the custom order head (seed 42), but it caught **0/96** of the held-out fault type. We changed the input, not the backbone size: a filter fitted only on normal training logs retained stable milestones and discarded intermittent telemetry. Both the custom head **and** BERT-Mini then caught **192/192 with zero false alerts**. The simpler learned precedence rule matched their accuracy and was faster.
-
-The projected inputs contain only two allowed normal workflows, both seen during training. This is evidence for the representation change on a controlled synthetic study, not for superiority over BERT or LLMs generally. The SmolLM2 run is a frozen four-shot comparison, not a fine-tuned baseline. Neither this comparison nor the upgrade was run on production logs.
-
-[Results, protocol and reproduction](research/external-comparison/README.md) · [Chart data](research/external-comparison/metrics.csv) · [Checkpoint provenance](research/external-comparison/sources.json)
 
 ## Order-aware upgrade: when counts miss the fault
 
