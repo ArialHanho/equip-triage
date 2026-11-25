@@ -44,6 +44,14 @@ print(predict(model, packet)["action"])  # data
 
 [API, tensor shapes, checkpoint format and custom training data](docs/MEMO_MODEL.md)
 
+### Inside one encoder layer
+
+![Left: self-attention and the GELU feed-forward network, with two residual additions and two layer norms. Right: packed QKV, key padding, softmax, value mixing and output projection.](docs/assets/memo-encoder-en.svg)
+
+The dashed paths carry the unchanged inputs to the two residual additions. Layer normalization follows each addition. On the right, one projection maps each 32-dimensional token vector to 96 values before splitting into Q, K and V, each with four 8-dimensional heads. The mask removes padded **keys** before softmax; it does not block future positions. The two memo lines use the same encoder weights but attend within their own lines.
+
+[Encoder code](equip_triage/model.py#L39-L65) · [Editable draw.io source, English and Korean](docs/assets/memo-encoder.drawio) · [Design reference: Transformer paper, Figures 1–2](https://arxiv.org/pdf/1706.03762#page=3)
+
 ## CSV replay
 
 From the repository root, run with Python 3.11+; the replay app requires no external dependencies.

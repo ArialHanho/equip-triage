@@ -44,6 +44,14 @@ print(predict(model, packet)["action"])  # data
 
 [API, 텐서 차원, 체크포인트 형식, 직접 만든 데이터로 학습하는 방법](docs/MEMO_MODEL.md)
 
+### 인코더 한 층 자세히 보기
+
+![왼쪽: 셀프 어텐션과 GELU 피드포워드 층, 두 잔차 연결과 LayerNorm. 오른쪽: QKV 투영부터 패딩 마스크, Softmax, 값 결합, 출력 투영까지.](docs/assets/memo-encoder-ko.svg)
+
+왼쪽 점선은 입력을 그대로 더하는 잔차 연결입니다. 덧셈 뒤에 LayerNorm을 적용합니다. 오른쪽은 셀프 어텐션을 펼친 것으로, 토큰마다 32차원인 입력을 한 번에 96차원으로 투영한 뒤 Q·K·V로 나눕니다. 각각 헤드 4개 × 8차원이고, 패딩 위치의 **키 점수**를 Softmax 전에 제외합니다. 앞뒤 순서를 가리는 인과 마스크는 쓰지 않습니다. 메모 두 줄은 같은 인코더를 쓰되 서로 섞이지 않습니다.
+
+[인코더 코드](equip_triage/model.py#L39-L65) · [편집 가능한 draw.io 원본 · 한글/영문](docs/assets/memo-encoder.drawio) · [설계 참고: Transformer 원논문 그림 1·2](https://arxiv.org/pdf/1706.03762#page=3)
+
 ## CSV 로그 검토
 
 저장소 루트에서 Python 3.11 이상으로 실행할 수 있습니다. 로그 검토 화면은 별도 패키지 설치 없이 실행됩니다.
