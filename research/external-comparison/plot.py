@@ -1,58 +1,132 @@
-"""Render the checked-in aggregate CSV as an accessible GitHub SVG."""
+"""Turn the frozen benchmark CSV into a three-panel publication plot."""
+import argparse
 import csv
-import math
 from pathlib import Path
-from html import escape
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from matplotlib.ticker import FixedLocator, LogFormatterMathtext, NullLocator, PercentFormatter
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE.parents[1] / 'docs' / 'assets' / 'external-benchmark.svg'
-with (HERE / 'metrics.csv').open(newline='') as handle:
-    data = {(r['method'], r['slice']): r for r in csv.DictReader(handle) if r['seed'] == '42'}
+DEFAULT_OUTPUT = HERE.parents[1] / "docs" / "assets" / "external-benchmark.svg"
+MODELS = [
+    ("counts", "Event counts"),
+    ("trigram", "Trigram"),
+    ("mlm", "Custom MLM"),
+    ("order", "Custom order head"),
+    ("tiny_pretrained", "BERT-Tiny"),
+    ("mini_pretrained", "BERT-Mini"),
+    ("smol", "SmolLM2 · 4-shot"),
+    ("milestone_order", "Custom head + milestones"),
+    ("mini_milestones", "BERT-Mini + milestones"),
+    ("precedence", "Learned precedence"),
+]
 
-svg = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 688" role="img" aria-labelledby="t d">',
-       '<title id="t">Order-fault detection across eight methods</title>',
-       '<desc id="d">Raw and milestone-input models compared on 192 synthetic pairs. Milestone-focused order head, BERT-Mini and precedence tie at full recall with no false alerts. Labels give detections, false alerts, and throughput.</desc>']
 
-def label(x,y,string,size=15,fg='#dce7f2',weight='400',align='start'):
-    svg.append(f'<text x="{x}" y="{y}" fill="{fg}" font-size="{size}" font-weight="{weight}" text-anchor="{align}">{escape(str(string))}</text>')
+def make_figure(data):
+    ink, subtle, grid = "#182632", "#47596c", "#dde5ed"
+    teal, blue, rust, purple = "#097c70", "#295eb0", "#a94c32", "#6147a0"
+    plt.rcParams.update({"font.family": "DejaVu Sans", "svg.hashsalt": "equip-triage-comp-v2", "svg.fonttype": "none"})
+    fig, (axr, axf, axt) = plt.subplots(
+        1, 3, figsize=(12.2, 6.6), sharey=True,
+        gridspec_kw={"width_ratios": [1.36, 0.93, 1.23], "wspace": 0.19},
+    )
+    fig.subplots_adjust(left=.223, right=.968, top=.744, bottom=.182)
+    fig.patch.set_facecolor("white")
+    pos = list(range(len(MODELS)))
+    axr.set_yticks(pos, [name for _, name in MODELS])
+    for ax in (axr, axf, axt):
+        ax.set_axisbelow(True)
+        ax.set_ylim(len(pos)-.4, -.57)
+        ax.axhspan(6.5, len(pos)-.4, color="#edf7f4", zorder=0)
+        ax.axhline(6.5, color="#a6c3bc", lw=.9, zorder=3)
+        ax.grid(axis="x", color=grid, lw=.75)
+        for spine in ("top", "right", "left"):
+            ax.spines[spine].set_visible(False)
+        ax.spines["bottom"].set_color("#8d9eae")
+        ax.tick_params(axis="x", colors=subtle, labelsize=10, length=3, pad=5)
+        ax.tick_params(axis="y", colors=ink, labelsize=11, length=0, pad=12)
 
-def rect(x,y,w,h,fill,corner=0):
-    svg.append(f'<rect x="{x}" y="{y}" width="{w:.3f}" height="{h}" fill="{fill}" rx="{corner}"/>')
+    axr.tick_params(labelleft=True)
+    for label in axr.get_yticklabels():
+        if label.get_text().startswith(("Custom head +", "BERT-Mini +", "Learned")):
+            label.set_fontweight("bold")
+    axr.set_xlim(-.035, 1.05)
+    axr.xaxis.set_major_locator(FixedLocator([0, .25, .50, .75, 1]))
+    axr.xaxis.set_major_formatter(PercentFormatter(1, decimals=0))
+    axf.set_xlim(-.003, .047)
+    axf.xaxis.set_major_locator(FixedLocator([0, .01, .02, .03, .04]))
+    axf.xaxis.set_major_formatter(PercentFormatter(1, decimals=0))
+    axf.axvline(.01, color="#758596", lw=1, linestyle=(0, (3, 3)), zorder=2)
+    axt.set_xscale("log")
+    axt.set_xlim(1, 1.6e6)
+    axt.xaxis.set_major_locator(FixedLocator([1, 100, 10000, 1000000]))
+    axt.xaxis.set_major_formatter(LogFormatterMathtext())
+    axt.xaxis.set_minor_locator(NullLocator())
+    for i, (method, _) in enumerate(MODELS):
+        full = data[method, "all"]
+        seen = float(data[method, "seen_scan"]["recall"])
+        unseen = float(data[method, "held_release"]["recall"])
+        axr.hlines(i-.14, 0, seen, color=teal, alpha=.32, linewidth=1.5)
+        axr.hlines(i+.14, 0, unseen, color=blue, alpha=.32, linewidth=1.5)
+        axr.scatter(seen, i-.14, s=35, c=teal, zorder=4)
+        axr.scatter(unseen, i+.14, s=38, marker="D", facecolors="white",
+                    edgecolors=blue, linewidths=1.4, zorder=4)
+        fpr = float(full["fpr"])
+        axf.hlines(i, 0, fpr, color=rust, alpha=.35, linewidth=1.5)
+        axf.scatter(fpr, i, c=rust, s=38, zorder=4)
+        speed = float(full["traces_per_cpu_s"])
+        axt.hlines(i, 1, speed, color=purple, alpha=.35, linewidth=1.5)
+        axt.scatter(speed, i, c=purple, marker="s", s=34, zorder=4)
 
-svg.append('<g font-family="system-ui,sans-serif">')
-rect(0,0,1100,688,'#0c1725',18)
-label(36,47,'EQUIP TRIAGE   /   SYNTHETIC MODEL COMPARISON',16,'#75e3c5','700')
-label(36,94,'Retain the milestones, not every poll',33,'#f7fbff','750')
-label(36,126,'192 matched test pairs · seed 42 · validation-normal threshold targeting ≤1% false alerts',16,'#a9bdce')
-rect(36,151,12,12,'#75e3c5',3)
-label(56,162,'Familiar fault (96)',14)
-rect(219,151,12,12,'#83abff',3)
-label(239,162,'Withheld fault (96)',14)
-label(233,200,'DETECTIONS / 96 PER FAULT SLICE',13,'#b5cce1','700')
-label(727,200,'FALSE ALERTS / 192',13,'#b5cce1','700','middle')
-label(1064,200,'TRACES / CPU SECOND',13,'#b5cce1','700','end')
-models = [('mlm','Custom MLM'),('order','Custom order head'),('tiny_pretrained','BERT-Tiny'),('mini_pretrained','BERT-Mini'),
-          ('smol','SmolLM2 135M · 4-shot'),('milestone_order','Custom head + milestones'),('mini_milestones','BERT-Mini + milestones'),('precedence','Learned precedence')]
-for idx,(key,name) in enumerate(models):
-    base = data[key,'all']
-    seen,held=(int(data[key,s]['tp']) for s in ('seen_scan','held_release'))
-    y=243+idx*49+(14 if idx>=5 else 0)
-    if idx==5:
-        rect(36,y-40,1028,1,'#456075')
-        label(36,y-22,'MILESTONE INPUTS OR RULES',11,'#75e3c5','700')
-    if idx%2==0:
-        rect(31,y-17,1038,43,'#122538',6)
-    label(36,y+8,name,14,'#dce7f2','650' if idx>=5 else '400')
-    for v,dy,c in ((seen,0,'#75e3c5'),(held,13,'#83abff')):
-        rect(233,y-7+dy,350,7,'#25384b',2)
-        if v:
-            rect(233,y-7+dy,350*v/96,7,c,2)
-        label(599,y+dy+1,v,12,c)
-    label(727,y+8,base['fp'],16,'#f7fbff','650','middle')
-    speed=float(base['traces_per_cpu_s'])
-    rect(835,y-2,110,6,'#25384b',2)
-    rect(835,y-2,110*max(.015,math.log10(speed)/6),6,'#c4a5ff',2)
-    label(1064,y+8,f'{speed:,.0f}' if speed>=100 else f'{speed:.1f}',15,'#efe4ff','500','end')
-label(36,662,'CPU bars use a log scale. BERT models are fine-tuned; the LLM uses four examples and no weight updates.',13,'#a9bdce')
-svg.append('</g></svg>')
-OUT.write_text('\n'.join(svg)+'\n', encoding='utf-8')
+    for ax, panel, heading, sub in (
+        (axr, "A", "Detection rate", "Per fault slice"),
+        (axf, "B", "False-alarm rate", "Normal test traces"),
+        (axt, "C", "CPU throughput", "Traces per CPU second · log scale"),
+    ):
+        ax.text(0, 1.105, f"{panel}    {heading}", transform=ax.transAxes,
+                color=ink, size=13, weight="bold", ha="left", va="bottom")
+        ax.text(0, 1.017, sub, transform=ax.transAxes, color=subtle,
+                size=9, ha="left", va="bottom")
+
+    fig.text(.053, .955, "EQUIP TRIAGE   /   EXTERNAL MODEL COMPARISON", color=teal,
+             size=10, weight="bold")
+    fig.text(.053, .891, "Order-fault detection across models", color=ink, size=24, weight="bold")
+    fig.text(.053, .85, "192 matched synthetic test pairs · seed 42 · identical event counts within each pair",
+             color=subtle, size=11)
+    handles = [
+        Line2D([], [], marker="o", linestyle="None", color=teal, label="Familiar fault (96)"),
+        Line2D([], [], marker="D", linestyle="None", color=blue, markerfacecolor="white",
+               markeredgewidth=1.4, label="Withheld fault (96)"),
+        Line2D([], [], linestyle="--", color="#758596", label="Validation false-alarm target (1%)"),
+    ]
+    fig.legend(handles=handles, loc="lower left", bbox_to_anchor=(.044,.065),
+               ncol=3, frameon=False, fontsize=10, labelcolor=ink, columnspacing=2.25)
+    fig.text(.053, .045, "Shading: projected milestone inputs or a precedence rule. BERT is fine-tuned; SmolLM2 is frozen.",
+             color=subtle, size=9.5)
+    return fig
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    args = parser.parse_args()
+    with (HERE / "metrics.csv").open(newline="") as handle:
+        data = {(r["method"], r["slice"]): r for r in csv.DictReader(handle) if r["seed"] == "42"}
+    fig = make_figure(data)
+    info = {"Title": "Equip Triage: order-fault model comparison"}
+    if args.output.suffix.lower() == ".svg":
+        info["Date"] = None
+        info["Description"] = ("Aligned detection, false-alarm and CPU-throughput plots for 192 synthetic pairs. "
+                               "Milestone-filtered custom and BERT-Mini models tie with learned precedence.")
+    fig.savefig(args.output, dpi=135, facecolor="white", metadata=info)
+    if args.output.suffix.lower() == ".svg":
+        clean = "\n".join(line.rstrip() for line in args.output.read_text(encoding="utf-8").splitlines())
+        args.output.write_text(clean + "\n", encoding="utf-8")
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    main()

@@ -6,7 +6,7 @@ Which detectors recognize an invalid order when the equipment supports two valid
 
 ![Detections by fault type, false alerts and batch CPU throughput](../../docs/assets/external-benchmark.svg)
 
-Regenerate the figure from the checked-in aggregate CSV with `python plot.py`.
+Regenerate the figure from the checked-in aggregate CSV with `python -m pip install matplotlib==3.10.8` and `python plot.py` from this folder. Use `--output figure.png` for a raster export.
 
 Each raw-input method scored the same original test traces. The projected-input controls used the same fitted event filter. Values below use seed 42. The full CSV includes both normal workflow slices and the extra order-model initializations. [Chart data](metrics.csv) · [Run aggregates and timings](results.json)
 
