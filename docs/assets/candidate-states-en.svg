@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="814" viewBox="0 0 1040 814" role="img" aria-labelledby="title description">
+<title id="title">How two check candidates read a bilingual memo</title>
+<desc id="description">Original architecture diagram. Bind two memo lines to registered checks. A shared local encoder creates token states. Each candidate reads its matched tokens through four-head attention. Route only a single continuing issue with the other cleared; otherwise hold.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1 L9 5 L1 9 z" fill="#56717e"/></marker></defs>
+<rect width="1040" height="814" fill="#fff"/>
+<text x="30" y="43" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="32" font-weight="700">How two check candidates read a bilingual memo</text>
+<text x="31" y="72" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="17" font-weight="400">Masked candidate-query model  ·  Illustration using the expected states of a synthetic packet</text>
+<path d="M30 89 L1010 89" stroke="#c4d0d6" stroke-width="1" fill="none"/>
+<rect x="30" y="103" width="31" height="29" rx="3" fill="#152f42" stroke="#152f42"/>
+<text x="45.5" y="124" text-anchor="middle" fill="white" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="18" font-weight="650">A</text>
+<text x="76" y="125" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="22" font-weight="650">Link observed references to event slots</text>
+<text x="40" y="161" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="600">Recorded candidates</text>
+<text x="335" y="161" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="600">Memo in received line order</text>
+<rect x="40" y="174" width="238" height="35" rx="4" fill="#eaf5f1" stroke="none"/>
+<rect x="40" y="174" width="4" height="35" rx="0" fill="#00665d" stroke="none"/>
+<text x="54" y="197" text-anchor="start" fill="#00665d" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="700">C1</text>
+<text x="102" y="197" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="400">L7 · Data collection</text>
+<rect x="40" y="216" width="238" height="35" rx="4" fill="#eaf2f9" stroke="none"/>
+<rect x="40" y="216" width="4" height="35" rx="0" fill="#1d5982" stroke="none"/>
+<text x="54" y="239" text-anchor="start" fill="#1d5982" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="700">C2</text>
+<text x="102" y="239" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="400">P3 · Measurement</text>
+<rect x="334" y="174" width="360" height="35" rx="4" fill="#eaf2f9" stroke="none"/>
+<rect x="334" y="174" width="4" height="35" rx="0" fill="#1d5982" stroke="none"/>
+<text x="348" y="197" text-anchor="start" fill="#1d5982" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="700">L1</text>
+<text x="396" y="197" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="400">P3 passed on retest.</text>
+<rect x="334" y="216" width="360" height="35" rx="4" fill="#eaf5f1" stroke="none"/>
+<rect x="334" y="216" width="4" height="35" rx="0" fill="#00665d" stroke="none"/>
+<text x="348" y="239" text-anchor="start" fill="#00665d" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="700">L2</text>
+<text x="396" y="239" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="400">L7 failed again on retest.</text>
+<path d="M288 209 L319 209" stroke="#56717e" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+<path d="M704 209 L734 209" stroke="#56717e" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+<text x="749" y="157" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="600">Allowed lines per candidate</text>
+<text x="869" y="178" text-anchor="middle" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="14" font-weight="600">L1</text>
+<text x="937" y="178" text-anchor="middle" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="14" font-weight="600">L2</text>
+<text x="807" y="206" text-anchor="middle" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="650">C1</text>
+<rect x="840" y="186" width="58" height="28" rx="3" fill="#f2f5f6" stroke="none"/>
+<text x="869" y="206" text-anchor="middle" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="650">0</text>
+<rect x="908" y="186" width="58" height="28" rx="3" fill="#00665d" stroke="none"/>
+<text x="937" y="206" text-anchor="middle" fill="white" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="650">1</text>
+<text x="807" y="240" text-anchor="middle" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="650">C2</text>
+<rect x="840" y="220" width="58" height="28" rx="3" fill="#1d5982" stroke="none"/>
+<text x="869" y="240" text-anchor="middle" fill="white" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="650">1</text>
+<rect x="908" y="220" width="58" height="28" rx="3" fill="#f2f5f6" stroke="none"/>
+<text x="937" y="240" text-anchor="middle" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="650">0</text>
+<path d="M30 274 L1010 274" stroke="#c4d0d6" stroke-width="1" fill="none"/>
+<rect x="30" y="288" width="31" height="29" rx="3" fill="#152f42" stroke="#152f42"/>
+<text x="45.5" y="309" text-anchor="middle" fill="white" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="18" font-weight="650">B</text>
+<text x="76" y="310" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="22" font-weight="650">Read each candidate’s evidence</text>
+<rect x="40" y="338" width="245" height="156" rx="5" fill="#f4f7f9" stroke="#c4d0d6"/>
+<rect x="333" y="338" width="307" height="156" rx="5" fill="#fbfcfd" stroke="#c4d0d6"/>
+<rect x="690" y="338" width="309" height="156" rx="5" fill="#f1f7f5" stroke="#c4d0d6"/>
+<text x="54" y="367" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="18" font-weight="650">Clause-local BERT [1]</text>
+<text x="54" y="394" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="400">Shared weights · two blocks</text>
+<text x="54" y="426" text-anchor="start" fill="#1d5982" font-family="DejaVu Sans, Noto Sans CJK KR, sans-serif" font-size="18" font-weight="600">H  [B, 2, L, 32]</text>
+<text x="54" y="459" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="400">Each line is encoded alone.</text>
+<text x="347" y="367" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="18" font-weight="650">Candidate queries [2, 3]</text>
+<text x="347" y="396" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="400">Q = Wq(domain + slot)</text>
+<text x="347" y="424" text-anchor="start" fill="#152f42" font-family="DejaVu Sans, Noto Sans CJK KR, sans-serif" font-size="16" font-weight="500">Q       [B, 4, 2, 8]</text>
+<text x="347" y="450" text-anchor="start" fill="#152f42" font-family="DejaVu Sans, Noto Sans CJK KR, sans-serif" font-size="16" font-weight="500">K, V   [B, 4, 2L, 8]  ← H</text>
+<text x="347" y="477" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="14" font-weight="400">Four heads · eight features per head</text>
+<text x="704" y="367" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="18" font-weight="650">Masked token pooling</text>
+<text x="704" y="399" text-anchor="start" fill="#00665d" font-family="DejaVu Sans, Noto Sans CJK KR, sans-serif" font-size="19" font-weight="600">S = QKᵀ / √8</text>
+<text x="704" y="428" text-anchor="start" fill="#152f42" font-family="DejaVu Sans, Noto Sans CJK KR, sans-serif" font-size="17" font-weight="500">A = softmax(mask(S))</text>
+<text x="704" y="454" text-anchor="start" fill="#152f42" font-family="DejaVu Sans, Noto Sans CJK KR, sans-serif" font-size="17" font-weight="500">Z = Wₒ concat(A V)</text>
+<text x="704" y="479" text-anchor="start" fill="#4e6573" font-family="DejaVu Sans, Noto Sans CJK KR, sans-serif" font-size="15" font-weight="500">Z   [B, 2, 32]</text>
+<path d="M292 415 L321 415" stroke="#56717e" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+<path d="M648 415 L679 415" stroke="#56717e" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+<text x="42" y="520" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="400">The mask excludes other lines, header tokens and padding. Ablations vary eligible lines and learned vs uniform weights.</text>
+<path d="M30 540 L1010 540" stroke="#c4d0d6" stroke-width="1" fill="none"/>
+<rect x="30" y="554" width="31" height="29" rx="3" fill="#152f42" stroke="#152f42"/>
+<text x="45.5" y="575" text-anchor="middle" fill="white" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="18" font-weight="650">C</text>
+<text x="76" y="576" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="22" font-weight="650">Count continuing checks, then apply the validation cutoff</text>
+<rect x="40" y="603" width="255" height="120" rx="5" fill="#f4f7f9" stroke="#c4d0d6"/>
+<rect x="339" y="603" width="382" height="120" rx="5" fill="#fff" stroke="#c4d0d6"/>
+<rect x="765" y="603" width="234" height="120" rx="5" fill="#fcf5ec" stroke="#c4d0d6"/>
+<text x="54" y="630" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="18" font-weight="650">Shared state head</text>
+<text x="54" y="659" text-anchor="start" fill="#152f42" font-family="DejaVu Sans, Noto Sans CJK KR, sans-serif" font-size="18" font-weight="500">LN(E + Z) → 3</text>
+<text x="54" y="684" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="400">continues · cleared · unknown</text>
+<text x="54" y="709" text-anchor="start" fill="#1d5982" font-family="DejaVu Sans, Noto Sans CJK KR, sans-serif" font-size="15" font-weight="500">logits   [B, 2, 3]</text>
+<text x="353" y="630" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="18" font-weight="650">Expected decisions</text>
+<text x="353" y="659" text-anchor="start" fill="#00665d" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="650">C1 continues + C2 cleared → C1</text>
+<text x="353" y="687" text-anchor="start" fill="#974b19" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="650">Both continue → hold for review</text>
+<text x="353" y="711" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="14" font-weight="400">Unknown, zero active or invalid input → hold</text>
+<text x="779" y="630" text-anchor="start" fill="#152f42" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="18" font-weight="650">Confidence gate</text>
+<text x="779" y="659" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="400">Use the lower of the two</text>
+<text x="779" y="682" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="400">state confidences.</text>
+<text x="779" y="710" text-anchor="start" fill="#974b19" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="16" font-weight="650">Below cutoff → hold</text>
+<path d="M302 663 L328 663" stroke="#56717e" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+<path d="M728 663 L754 663" stroke="#56717e" stroke-width="1.8" fill="none" marker-end="url(#arrow)"/>
+<path d="M30 746 L1010 746" stroke="#c4d0d6" stroke-width="1" fill="none"/>
+<text x="30" y="770" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="15" font-weight="400">B = batch size · L = padded line length · E = candidate embedding · M broadcasts over the four heads.</text>
+<text x="30" y="797" text-anchor="start" fill="#4e6573" font-family="Inter, Noto Sans CJK KR, DejaVu Sans, sans-serif" font-size="14" font-weight="400">[1] Devlin et al. (2019)   [2] Wang et al. (2016)   [3] Liu et al. (2021). Sources in the study report.</text>
+</svg>

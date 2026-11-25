@@ -1,0 +1,48 @@
+{
+  "files": {
+    "data.py": "9f22ad871c2bdae776b17ce86e41518652f541e60713fa0f44cb9b8a4487cab8",
+    "wordings.txt": "899ccc9c1d474ea1916e2efeb5845ead2fea4bc90a0031a78a60b37d9a36747c",
+    "PROTOCOL.md": "1afd3617a26375dc8a6ecfa51e636480facc3191589d6de4a736a08063595726"
+  },
+  "splits": {
+    "train": {
+      "rows": 2544,
+      "families": 12,
+      "cases": 24,
+      "labels": {
+        "measurement": 168,
+        "data": 168,
+        "hold": 1872,
+        "setup": 168,
+        "equipment": 168
+      },
+      "sha256": "35c09dc6e9631ecda2c6a83a2ba6bc9af08e9b241baf67a3fcb60045fca6f7de"
+    },
+    "validation": {
+      "rows": 848,
+      "families": 4,
+      "cases": 8,
+      "labels": {
+        "measurement": 56,
+        "data": 56,
+        "hold": 624,
+        "setup": 56,
+        "equipment": 56
+      },
+      "sha256": "3ffca0465d8902ace2988a45592606222336cf65456a5484f8b1f80a4d0da775"
+    },
+    "challenge": {
+      "rows": 1696,
+      "families": 8,
+      "cases": 16,
+      "labels": {
+        "measurement": 112,
+        "data": 112,
+        "hold": 1248,
+        "setup": 112,
+        "equipment": 112
+      },
+      "sha256": "5f361916208559ba1025ef2fed6f7ce9fd98e6540bc164cc564d56685ac017a9"
+    }
+  }
+}

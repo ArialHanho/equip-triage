@@ -8,7 +8,7 @@
 
 Replay an equipment CSV by machine and lot. Flag duplicate, late, missing, and conflicting records. Show the original rows behind a review or hold so an operator can inspect the equipment record before drawing a process conclusion.
 
-[Quickstart](#quickstart) · [Model architecture](#model-architecture) · [Benchmarks](#benchmarks) · [Time-gap attention](#time-gap-attention)
+[Quickstart](#quickstart) · [Model architecture](#model-architecture) · [Benchmarks](#benchmarks) · [Time-gap attention](#time-gap-attention) · [Bilingual memo routing](#bilingual-memo-routing)
 
 ![Two separate paths: equipment CSV to evidence review; event IDs to a two-block encoder with masked-event and order heads. External models run only as comparisons.](docs/assets/architecture-en.svg)
 
@@ -35,6 +35,22 @@ The app is an offline Python/SQLite replay, not a live collector or controller. 
 | [External models](research/external-comparison/README.md) | Google BERT-Tiny/Mini act as comparison encoders; frozen SmolLM2-135M-Instruct is a four-shot decoder-only comparison. The project encoder requires neither model nor a pretrained checkpoint. |
 
 The order head targets **illegal order with unchanged event counts**. The bidirectional model looks at completed sequences for retrospective review; the separate causal baseline predicts the next event from its prefix. Event IDs are not natural-language tokens. The dashboard supports Korean text, but the sequence encoder is not a Korean language model or an LLM.
+
+## Bilingual memo routing
+
+When one check still fails and a second check has recovered, the memo can support a single inspection. If both still fail, it calls for review. The offline memo experiment reads two registered checks and two lines of English or Korean. It predicts **continues, cleared or unknown** for each candidate and routes only when one continues and the other is cleared.
+
+![Synthetic worked example of the candidate-query model. Each candidate reads the tokens on its matched memo line, a shared head predicts its state, and a count determines whether to route or hold.](docs/assets/candidate-states-en.svg)
+
+The figure shows the implemented scratch BERT arm using the **expected states** for an example. The model encodes each line separately and restricts candidate-query attention to evidence matched by the visible registry. A uniform-pooling control reads the same tokens. Target-conditioned reading and label queries have prior examples. [Wang et al., 2016](https://aclanthology.org/D16-1058/) · [Liu et al., 2021](https://arxiv.org/abs/2107.10834)
+
+| Method | One vs two continuing checks, EN | One vs two continuing checks, KO | Macro-F1, EN / KO |
+| --- | ---: | ---: | ---: |
+| Scoped bilingual rule | 70/112 | 98/112 | 0.803 / 0.942 |
+| Character TF-IDF, candidate’s matched line | 35/112 | 83/112 | 0.510 / 0.858 |
+| Scratch BERT, masked candidate queries | 0/112 | 0/112 | 0.170 / 0.170 |
+
+Both decisions in a pair must be correct. The fresh synthetic challenge holds out eight wording families. The validation-selected default is the character model. It passes 16/624 English gold holds and 0/624 Korean gold holds to a check. The rule performs best on the challenge. The query encoder holds every case at its selected operating point at all three seeds. The measured benefit comes from predicting states per candidate and counting continuing checks in the character model; learned attention shows no gain here. [Run the bilingual CLI](research/candidate-states/README.md) · [Ablations, uncertainty and coverage](research/candidate-states/REPORT.md)
 
 ## Benchmarks
 
