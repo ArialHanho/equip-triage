@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 688" role="img" aria-labelledby="t d">
+<title id="t">Order-fault detection across eight methods</title>
+<desc id="d">Raw and milestone-input models compared on 192 synthetic pairs. Milestone-focused order head, BERT-Mini and precedence tie at full recall with no false alerts. Labels give detections, false alerts, and throughput.</desc>
+<g font-family="system-ui,sans-serif">
+<rect x="0" y="0" width="1100.000" height="688" fill="#0c1725" rx="18"/>
+<text x="36" y="47" fill="#75e3c5" font-size="16" font-weight="700" text-anchor="start">EQUIP TRIAGE   /   SYNTHETIC MODEL COMPARISON</text>
+<text x="36" y="94" fill="#f7fbff" font-size="33" font-weight="750" text-anchor="start">Retain the milestones, not every poll</text>
+<text x="36" y="126" fill="#a9bdce" font-size="16" font-weight="400" text-anchor="start">192 matched test pairs · seed 42 · validation-normal threshold targeting ≤1% false alerts</text>
+<rect x="36" y="151" width="12.000" height="12" fill="#75e3c5" rx="3"/>
+<text x="56" y="162" fill="#dce7f2" font-size="14" font-weight="400" text-anchor="start">Familiar fault (96)</text>
+<rect x="219" y="151" width="12.000" height="12" fill="#83abff" rx="3"/>
+<text x="239" y="162" fill="#dce7f2" font-size="14" font-weight="400" text-anchor="start">Withheld fault (96)</text>
+<text x="233" y="200" fill="#b5cce1" font-size="13" font-weight="700" text-anchor="start">DETECTIONS / 96 PER FAULT SLICE</text>
+<text x="727" y="200" fill="#b5cce1" font-size="13" font-weight="700" text-anchor="middle">FALSE ALERTS / 192</text>
+<text x="1064" y="200" fill="#b5cce1" font-size="13" font-weight="700" text-anchor="end">TRACES / CPU SECOND</text>
+<rect x="31" y="226" width="1038.000" height="43" fill="#122538" rx="6"/>
+<text x="36" y="251" fill="#dce7f2" font-size="14" font-weight="400" text-anchor="start">Custom MLM</text>
+<rect x="233" y="236" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="236" width="21.875" height="7" fill="#75e3c5" rx="2"/>
+<text x="599" y="244" fill="#75e3c5" font-size="12" font-weight="400" text-anchor="start">6</text>
+<rect x="233" y="249" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="249" width="7.292" height="7" fill="#83abff" rx="2"/>
+<text x="599" y="257" fill="#83abff" font-size="12" font-weight="400" text-anchor="start">2</text>
+<text x="727" y="251" fill="#f7fbff" font-size="16" font-weight="650" text-anchor="middle">5</text>
+<rect x="835" y="241" width="110.000" height="6" fill="#25384b" rx="2"/>
+<rect x="835" y="241" width="57.690" height="6" fill="#c4a5ff" rx="2"/>
+<text x="1064" y="251" fill="#efe4ff" font-size="15" font-weight="500" text-anchor="end">1,402</text>
+<text x="36" y="300" fill="#dce7f2" font-size="14" font-weight="400" text-anchor="start">Custom order head</text>
+<rect x="233" y="285" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="285" width="10.938" height="7" fill="#75e3c5" rx="2"/>
+<text x="599" y="293" fill="#75e3c5" font-size="12" font-weight="400" text-anchor="start">3</text>
+<rect x="233" y="298" width="350.000" height="7" fill="#25384b" rx="2"/>
+<text x="599" y="306" fill="#83abff" font-size="12" font-weight="400" text-anchor="start">0</text>
+<text x="727" y="300" fill="#f7fbff" font-size="16" font-weight="650" text-anchor="middle">1</text>
+<rect x="835" y="290" width="110.000" height="6" fill="#25384b" rx="2"/>
+<rect x="835" y="290" width="77.489" height="6" fill="#c4a5ff" rx="2"/>
+<text x="1064" y="300" fill="#efe4ff" font-size="15" font-weight="500" text-anchor="end">16,853</text>
+<rect x="31" y="324" width="1038.000" height="43" fill="#122538" rx="6"/>
+<text x="36" y="349" fill="#dce7f2" font-size="14" font-weight="400" text-anchor="start">BERT-Tiny</text>
+<rect x="233" y="334" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="334" width="189.583" height="7" fill="#75e3c5" rx="2"/>
+<text x="599" y="342" fill="#75e3c5" font-size="12" font-weight="400" text-anchor="start">52</text>
+<rect x="233" y="347" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="347" width="3.646" height="7" fill="#83abff" rx="2"/>
+<text x="599" y="355" fill="#83abff" font-size="12" font-weight="400" text-anchor="start">1</text>
+<text x="727" y="349" fill="#f7fbff" font-size="16" font-weight="650" text-anchor="middle">2</text>
+<rect x="835" y="339" width="110.000" height="6" fill="#25384b" rx="2"/>
+<rect x="835" y="339" width="61.909" height="6" fill="#c4a5ff" rx="2"/>
+<text x="1064" y="349" fill="#efe4ff" font-size="15" font-weight="500" text-anchor="end">2,381</text>
+<text x="36" y="398" fill="#dce7f2" font-size="14" font-weight="400" text-anchor="start">BERT-Mini</text>
+<rect x="233" y="383" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="383" width="295.312" height="7" fill="#75e3c5" rx="2"/>
+<text x="599" y="391" fill="#75e3c5" font-size="12" font-weight="400" text-anchor="start">81</text>
+<rect x="233" y="396" width="350.000" height="7" fill="#25384b" rx="2"/>
+<text x="599" y="404" fill="#83abff" font-size="12" font-weight="400" text-anchor="start">0</text>
+<text x="727" y="398" fill="#f7fbff" font-size="16" font-weight="650" text-anchor="middle">8</text>
+<rect x="835" y="388" width="110.000" height="6" fill="#25384b" rx="2"/>
+<rect x="835" y="388" width="50.035" height="6" fill="#c4a5ff" rx="2"/>
+<text x="1064" y="398" fill="#efe4ff" font-size="15" font-weight="500" text-anchor="end">536</text>
+<rect x="31" y="422" width="1038.000" height="43" fill="#122538" rx="6"/>
+<text x="36" y="447" fill="#dce7f2" font-size="14" font-weight="400" text-anchor="start">SmolLM2 135M · 4-shot</text>
+<rect x="233" y="432" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="432" width="10.938" height="7" fill="#75e3c5" rx="2"/>
+<text x="599" y="440" fill="#75e3c5" font-size="12" font-weight="400" text-anchor="start">3</text>
+<rect x="233" y="445" width="350.000" height="7" fill="#25384b" rx="2"/>
+<text x="599" y="453" fill="#83abff" font-size="12" font-weight="400" text-anchor="start">0</text>
+<text x="727" y="447" fill="#f7fbff" font-size="16" font-weight="650" text-anchor="middle">4</text>
+<rect x="835" y="437" width="110.000" height="6" fill="#25384b" rx="2"/>
+<rect x="835" y="437" width="8.038" height="6" fill="#c4a5ff" rx="2"/>
+<text x="1064" y="447" fill="#efe4ff" font-size="15" font-weight="500" text-anchor="end">2.7</text>
+<rect x="36" y="462" width="1028.000" height="1" fill="#456075" rx="0"/>
+<text x="36" y="480" fill="#75e3c5" font-size="11" font-weight="700" text-anchor="start">MILESTONE INPUTS OR RULES</text>
+<text x="36" y="510" fill="#dce7f2" font-size="14" font-weight="650" text-anchor="start">Custom head + milestones</text>
+<rect x="233" y="495" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="495" width="350.000" height="7" fill="#75e3c5" rx="2"/>
+<text x="599" y="503" fill="#75e3c5" font-size="12" font-weight="400" text-anchor="start">96</text>
+<rect x="233" y="508" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="508" width="350.000" height="7" fill="#83abff" rx="2"/>
+<text x="599" y="516" fill="#83abff" font-size="12" font-weight="400" text-anchor="start">96</text>
+<text x="727" y="510" fill="#f7fbff" font-size="16" font-weight="650" text-anchor="middle">0</text>
+<rect x="835" y="500" width="110.000" height="6" fill="#25384b" rx="2"/>
+<rect x="835" y="500" width="80.995" height="6" fill="#c4a5ff" rx="2"/>
+<text x="1064" y="510" fill="#efe4ff" font-size="15" font-weight="500" text-anchor="end">26,175</text>
+<rect x="31" y="534" width="1038.000" height="43" fill="#122538" rx="6"/>
+<text x="36" y="559" fill="#dce7f2" font-size="14" font-weight="650" text-anchor="start">BERT-Mini + milestones</text>
+<rect x="233" y="544" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="544" width="350.000" height="7" fill="#75e3c5" rx="2"/>
+<text x="599" y="552" fill="#75e3c5" font-size="12" font-weight="400" text-anchor="start">96</text>
+<rect x="233" y="557" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="557" width="350.000" height="7" fill="#83abff" rx="2"/>
+<text x="599" y="565" fill="#83abff" font-size="12" font-weight="400" text-anchor="start">96</text>
+<text x="727" y="559" fill="#f7fbff" font-size="16" font-weight="650" text-anchor="middle">0</text>
+<rect x="835" y="549" width="110.000" height="6" fill="#25384b" rx="2"/>
+<rect x="835" y="549" width="57.755" height="6" fill="#c4a5ff" rx="2"/>
+<text x="1064" y="559" fill="#efe4ff" font-size="15" font-weight="500" text-anchor="end">1,413</text>
+<text x="36" y="608" fill="#dce7f2" font-size="14" font-weight="650" text-anchor="start">Learned precedence</text>
+<rect x="233" y="593" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="593" width="350.000" height="7" fill="#75e3c5" rx="2"/>
+<text x="599" y="601" fill="#75e3c5" font-size="12" font-weight="400" text-anchor="start">96</text>
+<rect x="233" y="606" width="350.000" height="7" fill="#25384b" rx="2"/>
+<rect x="233" y="606" width="350.000" height="7" fill="#83abff" rx="2"/>
+<text x="599" y="614" fill="#83abff" font-size="12" font-weight="400" text-anchor="start">96</text>
+<text x="727" y="608" fill="#f7fbff" font-size="16" font-weight="650" text-anchor="middle">0</text>
+<rect x="835" y="598" width="110.000" height="6" fill="#25384b" rx="2"/>
+<rect x="835" y="598" width="98.726" height="6" fill="#c4a5ff" rx="2"/>
+<text x="1064" y="608" fill="#efe4ff" font-size="15" font-weight="500" text-anchor="end">242,677</text>
+<text x="36" y="662" fill="#a9bdce" font-size="13" font-weight="400" text-anchor="start">CPU bars use a log scale. BERT models are fine-tuned; the LLM uses four examples and no weight updates.</text>
+</g></svg>

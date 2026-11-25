@@ -1,0 +1,995 @@
+{
+  "data_seed": 241125,
+  "torch": "2.9.1+cpu",
+  "transformers": "4.57.3",
+  "threads": 1,
+  "dtype": "float32",
+  "runs": [
+    {
+      "method": "counts",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 0,
+      "threshold": 5.953243334287785,
+      "validation_fp": 0,
+      "fit_and_load_cpu_seconds": 0.0012347010000004488,
+      "test_scoring_cpu_seconds": 0.0004029359999995208,
+      "cpu_traces_per_second": 953004.9437142789,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 0,
+          "fp": 0,
+          "pair_wins": 0,
+          "pair_ties": 192,
+          "average_precision": 0.5
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 0,
+          "pair_wins": 0,
+          "pair_ties": 96,
+          "average_precision": 0.5
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 0,
+          "pair_wins": 0,
+          "pair_ties": 96,
+          "average_precision": 0.5
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 0,
+          "pair_wins": 0,
+          "pair_ties": 96,
+          "average_precision": 0.5
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 0,
+          "pair_wins": 0,
+          "pair_ties": 96,
+          "average_precision": 0.5
+        }
+      }
+    },
+    {
+      "method": "trigram",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 0,
+      "threshold": 1.92484574542812,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 0.0037335320000000394,
+      "test_scoring_cpu_seconds": 0.011880635999999889,
+      "cpu_traces_per_second": 32321.50198019732,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 140,
+          "fp": 3,
+          "pair_wins": 172,
+          "pair_ties": 1,
+          "average_precision": 0.9393438671806642
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 44,
+          "fp": 2,
+          "pair_wins": 76,
+          "pair_ties": 1,
+          "average_precision": 0.8651812380684396
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 1,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 0.9999999999999986
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 67,
+          "fp": 3,
+          "pair_wins": 88,
+          "pair_ties": 0,
+          "average_precision": 0.932692656001796
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 73,
+          "fp": 0,
+          "pair_wins": 84,
+          "pair_ties": 1,
+          "average_precision": 0.9468216599406026
+        }
+      }
+    },
+    {
+      "method": "precedence",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 0,
+      "threshold": 0,
+      "validation_fp": 0,
+      "fit_and_load_cpu_seconds": 0.002778057999999639,
+      "test_scoring_cpu_seconds": 0.0015823510000005925,
+      "cpu_traces_per_second": 242676.87763325343,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 192,
+          "fp": 0,
+          "pair_wins": 192,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        }
+      }
+    },
+    {
+      "method": "mlm",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 27341,
+      "threshold": 2.150554656982422,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 0.6506182819999999,
+      "test_scoring_cpu_seconds": 0.2739193550000003,
+      "cpu_traces_per_second": 1401.872459870532,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 8,
+          "fp": 5,
+          "pair_wins": 161,
+          "pair_ties": 0,
+          "average_precision": 0.6475949220872665
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 6,
+          "fp": 2,
+          "pair_wins": 78,
+          "pair_ties": 0,
+          "average_precision": 0.6419566393805881
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 2,
+          "fp": 3,
+          "pair_wins": 83,
+          "pair_ties": 0,
+          "average_precision": 0.6527757913582054
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 2,
+          "fp": 0,
+          "pair_wins": 79,
+          "pair_ties": 0,
+          "average_precision": 0.672344731807957
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 6,
+          "fp": 5,
+          "pair_wins": 82,
+          "pair_ties": 0,
+          "average_precision": 0.641357108411591
+        }
+      }
+    },
+    {
+      "method": "order",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 27374,
+      "threshold": 0.09154794365167618,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 1.606226608,
+      "test_scoring_cpu_seconds": 0.022784711999999097,
+      "cpu_traces_per_second": 16853.405915335476,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 3,
+          "fp": 1,
+          "pair_wins": 137,
+          "pair_ties": 0,
+          "average_precision": 0.6291419774048504
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 3,
+          "fp": 0,
+          "pair_wins": 76,
+          "pair_ties": 0,
+          "average_precision": 0.7143221858530018
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 1,
+          "pair_wins": 61,
+          "pair_ties": 0,
+          "average_precision": 0.5435052502193541
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 1,
+          "pair_wins": 69,
+          "pair_ties": 0,
+          "average_precision": 0.6373929534972129
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 3,
+          "fp": 0,
+          "pair_wins": 68,
+          "pair_ties": 0,
+          "average_precision": 0.6350195805294617
+        }
+      }
+    },
+    {
+      "method": "tiny_random",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 4386178,
+      "threshold": -0.007278759032487869,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 11.410727936,
+      "test_scoring_cpu_seconds": 0.15548076700000024,
+      "cpu_traces_per_second": 2469.758848050958,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 4,
+          "fp": 2,
+          "pair_wins": 133,
+          "pair_ties": 0,
+          "average_precision": 0.5617050575510649
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 3,
+          "fp": 2,
+          "pair_wins": 84,
+          "pair_ties": 0,
+          "average_precision": 0.6191619616530754
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 1,
+          "fp": 0,
+          "pair_wins": 49,
+          "pair_ties": 0,
+          "average_precision": 0.5103493715114155
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 3,
+          "fp": 2,
+          "pair_wins": 67,
+          "pair_ties": 0,
+          "average_precision": 0.5452958483661975
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 1,
+          "fp": 0,
+          "pair_wins": 66,
+          "pair_ties": 0,
+          "average_precision": 0.5888051986295929
+        }
+      }
+    },
+    {
+      "method": "tiny_pretrained",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 4386178,
+      "threshold": 1.5313183069229126,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 11.585090829000002,
+      "test_scoring_cpu_seconds": 0.1612449720000022,
+      "cpu_traces_per_second": 2381.4696063824845,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 53,
+          "fp": 2,
+          "pair_wins": 133,
+          "pair_ties": 0,
+          "average_precision": 0.7880689751892411
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 52,
+          "fp": 1,
+          "pair_wins": 94,
+          "pair_ties": 0,
+          "average_precision": 0.9654520558703296
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 1,
+          "fp": 1,
+          "pair_wins": 39,
+          "pair_ties": 0,
+          "average_precision": 0.5222580684195822
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 10,
+          "fp": 2,
+          "pair_wins": 67,
+          "pair_ties": 0,
+          "average_precision": 0.7408940468546122
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 43,
+          "fp": 0,
+          "pair_wins": 66,
+          "pair_ties": 0,
+          "average_precision": 0.8114176992265386
+        }
+      }
+    },
+    {
+      "method": "mini_random",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 11171074,
+      "threshold": 2.497915744781494,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 57.707763082,
+      "test_scoring_cpu_seconds": 0.7038342529999966,
+      "cpu_traces_per_second": 545.5829953760461,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 74,
+          "fp": 8,
+          "pair_wins": 142,
+          "pair_ties": 0,
+          "average_precision": 0.7906728710043477
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 72,
+          "fp": 3,
+          "pair_wins": 85,
+          "pair_ties": 0,
+          "average_precision": 0.9484997395424406
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 2,
+          "fp": 5,
+          "pair_wins": 57,
+          "pair_ties": 0,
+          "average_precision": 0.5177546908505944
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 31,
+          "fp": 2,
+          "pair_wins": 69,
+          "pair_ties": 0,
+          "average_precision": 0.7782529658776138
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 43,
+          "fp": 6,
+          "pair_wins": 73,
+          "pair_ties": 0,
+          "average_precision": 0.805105468391229
+        }
+      }
+    },
+    {
+      "method": "mini_pretrained",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 11171074,
+      "threshold": 2.3129448890686035,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 59.412385183000005,
+      "test_scoring_cpu_seconds": 0.7163953759999941,
+      "cpu_traces_per_second": 536.0168600529928,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 81,
+          "fp": 8,
+          "pair_wins": 128,
+          "pair_ties": 0,
+          "average_precision": 0.7667291160821512
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 81,
+          "fp": 3,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 0.9815698569330644
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 5,
+          "pair_wins": 32,
+          "pair_ties": 0,
+          "average_precision": 0.4244205161719428
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 35,
+          "fp": 5,
+          "pair_wins": 63,
+          "pair_ties": 0,
+          "average_precision": 0.7502725964476429
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 46,
+          "fp": 3,
+          "pair_wins": 65,
+          "pair_ties": 0,
+          "average_precision": 0.7837819031331092
+        }
+      }
+    },
+    {
+      "method": "milestone_order",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 27374,
+      "threshold": -3.2403204441070557,
+      "validation_fp": 0,
+      "fit_and_load_cpu_seconds": 0.9645082349999994,
+      "test_scoring_cpu_seconds": 0.014670402000000138,
+      "cpu_traces_per_second": 26175.15184655447,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 192,
+          "fp": 0,
+          "pair_wins": 192,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        }
+      }
+    },
+    {
+      "method": "tiny_milestones",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 4386178,
+      "threshold": -2.2213869094848633,
+      "validation_fp": 0,
+      "fit_and_load_cpu_seconds": 6.456941234,
+      "test_scoring_cpu_seconds": 0.08074479099999898,
+      "cpu_traces_per_second": 4755.724737711004,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 144,
+          "fp": 0,
+          "pair_wins": 192,
+          "pair_ties": 0,
+          "average_precision": 0.9166666666666666
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 48,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 0.8333333333333333
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 48,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        }
+      }
+    },
+    {
+      "method": "mini_milestones",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 11171074,
+      "threshold": -4.619097709655762,
+      "validation_fp": 0,
+      "fit_and_load_cpu_seconds": 23.922944217,
+      "test_scoring_cpu_seconds": 0.27168701400000117,
+      "cpu_traces_per_second": 1413.3910721253624,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 192,
+          "fp": 0,
+          "pair_wins": 192,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        }
+      }
+    },
+    {
+      "method": "smol",
+      "seed": 42,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 134515008,
+      "threshold": 0.4420967102050781,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 1.6367959810000006,
+      "test_scoring_cpu_seconds": 139.92272666600002,
+      "cpu_traces_per_second": 2.7443719054776583,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 3,
+          "fp": 4,
+          "pair_wins": 68,
+          "pair_ties": 0,
+          "average_precision": 0.49814531053429334
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 3,
+          "fp": 3,
+          "pair_wins": 38,
+          "pair_ties": 0,
+          "average_precision": 0.510181398756089
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 1,
+          "pair_wins": 30,
+          "pair_ties": 0,
+          "average_precision": 0.49131630049623776
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 3,
+          "fp": 4,
+          "pair_wins": 48,
+          "pair_ties": 0,
+          "average_precision": 0.5082471568121506
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 0,
+          "pair_wins": 20,
+          "pair_ties": 0,
+          "average_precision": 0.4929043315787181
+        }
+      }
+    },
+    {
+      "method": "order",
+      "seed": 41,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 27374,
+      "threshold": 0.09184117615222931,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 2.0108384850000007,
+      "test_scoring_cpu_seconds": 0.0231383730000001,
+      "cpu_traces_per_second": 16595.80818409308,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 4,
+          "fp": 1,
+          "pair_wins": 111,
+          "pair_ties": 0,
+          "average_precision": 0.5656195777767958
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 2,
+          "fp": 0,
+          "pair_wins": 73,
+          "pair_ties": 0,
+          "average_precision": 0.638164831454462
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 2,
+          "fp": 1,
+          "pair_wins": 38,
+          "pair_ties": 0,
+          "average_precision": 0.5103663691839189
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 3,
+          "fp": 1,
+          "pair_wins": 54,
+          "pair_ties": 0,
+          "average_precision": 0.5869539399116618
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 1,
+          "fp": 0,
+          "pair_wins": 57,
+          "pair_ties": 0,
+          "average_precision": 0.5400799429797374
+        }
+      }
+    },
+    {
+      "method": "milestone_order",
+      "seed": 41,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 27374,
+      "threshold": -3.447953462600708,
+      "validation_fp": 0,
+      "fit_and_load_cpu_seconds": 0.982455184,
+      "test_scoring_cpu_seconds": 0.015234958000000631,
+      "cpu_traces_per_second": 25205.18927587356,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 192,
+          "fp": 0,
+          "pair_wins": 192,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        }
+      }
+    },
+    {
+      "method": "order",
+      "seed": 43,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 27374,
+      "threshold": 0.03273509442806244,
+      "validation_fp": 1,
+      "fit_and_load_cpu_seconds": 1.8045381670000005,
+      "test_scoring_cpu_seconds": 0.02344729000000001,
+      "cpu_traces_per_second": 16377.159151441376,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 1,
+          "fp": 1,
+          "pair_wins": 143,
+          "pair_ties": 0,
+          "average_precision": 0.6077351993853546
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 0,
+          "pair_wins": 85,
+          "pair_ties": 0,
+          "average_precision": 0.5951046977078287
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 1,
+          "fp": 1,
+          "pair_wins": 58,
+          "pair_ties": 0,
+          "average_precision": 0.6201749566493124
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 0,
+          "fp": 0,
+          "pair_wins": 71,
+          "pair_ties": 0,
+          "average_precision": 0.6121938927159133
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 1,
+          "fp": 1,
+          "pair_wins": 72,
+          "pair_ties": 0,
+          "average_precision": 0.6162835147278425
+        }
+      }
+    },
+    {
+      "method": "milestone_order",
+      "seed": 43,
+      "split_sizes": [
+        384,
+        128,
+        192
+      ],
+      "split_digest": "f41c05825d14ca82b31a41b4504aab9f0ae70108a71fd7c1e7300d29ee2f6221",
+      "parameters": 27374,
+      "threshold": -3.9196038246154785,
+      "validation_fp": 0,
+      "fit_and_load_cpu_seconds": 0.9600788079999996,
+      "test_scoring_cpu_seconds": 0.014502163999999595,
+      "cpu_traces_per_second": 26478.80688702808,
+      "metrics": {
+        "all": {
+          "pairs": 192,
+          "tp": 192,
+          "fp": 0,
+          "pair_wins": 192,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "seen_scan": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "held_release": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_clamp_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        },
+        "normal_zero_first": {
+          "pairs": 96,
+          "tp": 96,
+          "fp": 0,
+          "pair_wins": 96,
+          "pair_ties": 0,
+          "average_precision": 1.0
+        }
+      }
+    }
+  ]
+}
